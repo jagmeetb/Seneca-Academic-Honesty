@@ -14,7 +14,8 @@ IncidentGetAll()
 IncidentGetOne()
 IncidentGetById()
 
-
+The following functions were coded by Shawn:
+StudentSearch()
 
 */
 using System;
@@ -102,8 +103,8 @@ namespace BTS.Controllers
 				//ds.SaveChanges();
 				//done = true;
 			}*/
-           RemoveDatabase();
-            RemoveData();
+      //    RemoveDatabase();
+       //     RemoveData();
             if (loadDataInstructor())
             {
                 if (loadDataCourse())
@@ -280,7 +281,8 @@ namespace BTS.Controllers
 
         public IEnumerable<IncidentBase> IncidentGetAll()
         {
-            return Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
+            var x = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
+            return x;
         }
 
         public IncidentWithDetails IncidentGetOne(int id)
@@ -321,6 +323,21 @@ namespace BTS.Controllers
                 return Mapper.Map<IncidentWithDetails>(o);
             }
         }
+
+        public IEnumerable<StudentBase> StudentSearch(StudentSearch newItem)
+        {
+           // var o = ds.Students.SingleOrDefault(a => a.name == newItem.searchTerm);
+            var o = ds.Students.Where(a => a.name.Contains(newItem.searchTerm));
+            if (o == null)
+            {
+                return null;
+            }
+            else
+            {
+                IEnumerable<StudentBase> x = Mapper.Map<IEnumerable<StudentBase>>(o);
+                return x;
+            }
+        } 
 
         public IncidentWithDetails IncidentEdit(IncidentEdit newItem)
         {

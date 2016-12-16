@@ -1,5 +1,5 @@
 ﻿//
-// author: Mona and Jagmeet
+// author: Jagmeet
 //
 
 
@@ -15,8 +15,6 @@ namespace BTS.Controllers
     {
         private Manager m = new Manager();
         // GET: Incident
-
-        //Mona
         public ActionResult Index()
         {
             m.LoadData();
@@ -24,8 +22,6 @@ namespace BTS.Controllers
         }
 
         // GET: Incident/Details/5
-
-        //Mona
         public ActionResult Details(int? id)
         {
             var o = m.IncidentGetOne(id.GetValueOrDefault());
@@ -64,8 +60,6 @@ namespace BTS.Controllers
         }
         */
         // GET: Incident/Edit/5
-
-        //Jagmeet
         public ActionResult Edit(int? id)
         {
             var o = m.IncidentGetOne(id.GetValueOrDefault());
@@ -107,8 +101,6 @@ namespace BTS.Controllers
 
         
         // POST: Incident/Edit/5
-
-        //Jagmeet
         [HttpPost]
         public ActionResult Edit(int ? id, IncidentEdit newItem)
         {

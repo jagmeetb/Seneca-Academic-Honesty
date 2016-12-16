@@ -56,6 +56,8 @@ namespace BTS.Models
 			return new ApplicationDbContext();
 		}
 
-        
+        public System.Data.Entity.DbSet<BTS.Controllers.StudentSearch> StudentSearches { get; set; }
+
+        public System.Data.Entity.DbSet<BTS.Controllers.StudentBase> StudentBases { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿//
-// author: Mona
+// author: Shawn
 //
 
 
@@ -13,7 +13,6 @@ namespace BTS.Controllers
 {
     public class StudentBase
     {
-
         public int Id { get; set; }
         [Display(Name = "Student Name")]
         public string name { get; set; }
@@ -23,13 +22,26 @@ namespace BTS.Controllers
         public string emailAddress { get; set; }
         [Display(Name = "Year")]
         public string year { get; set; }
-
-        public ICollection<int> IncidentIds { get; set; }
-        public ICollection<int> CourseIds { get; set; }
     }
 
 	public class StudentWithDetails : StudentBase
     {
-		public ICollection<IncidentBase> Incidents { get; set; }
+        public StudentWithDetails()
+        {
+            IncidentIds = new List<int>();
+            CourseIds = new List<int>();
+            Incidents = new List<IncidentBase>();
+        }
+
+        public ICollection<int> IncidentIds { get; set; }
+        public ICollection<int> CourseIds { get; set; }
+        public ICollection<IncidentBase> Incidents { get; set; }
+    }
+
+    public class StudentSearch
+    {
+        public int Id { get; set; }
+        [Required]
+        public string searchTerm { get; set; }
     }
 }

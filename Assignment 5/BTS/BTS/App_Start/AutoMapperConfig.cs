@@ -38,6 +38,9 @@ namespace BTS
             Mapper.CreateMap<Models.Student, Controllers.StudentBase>();
             Mapper.CreateMap<Models.Student, Controllers.StudentWithDetails>();
 
+            Mapper.CreateMap<Controllers.StudentBase, Models.Student>();
+            Mapper.CreateMap<Controllers.StudentWithDetails, Models.Student>();
+
             // Add more below...
 
 

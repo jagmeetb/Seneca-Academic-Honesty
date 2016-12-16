@@ -184,6 +184,7 @@
     <Compile Include="Controllers\LoadDataController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\Manager.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -267,8 +268,10 @@
     <Content Include="Views\Errors\ServerError.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Upload.cshtml" />
     <Content Include="Views\Incident\Index.cshtml" />
-	<Content Include="Views\Incident\Edit.cshtml" />
-	<Content Include="Views\Incident\Details.cshtml" />
+    <Content Include="Views\Incident\Edit.cshtml" />
+    <Content Include="Views\Incident\Details.cshtml" />
+    <Content Include="Views\Student\Search.cshtml" />
+    <Content Include="Views\Student\SearchPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

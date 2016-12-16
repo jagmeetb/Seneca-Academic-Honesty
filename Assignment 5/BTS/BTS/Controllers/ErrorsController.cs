@@ -30,8 +30,7 @@ namespace BTS.Controllers
 			ViewBag.Prompt = "Error message:";
 			ViewBag.Error = HttpContext.Error.Message;
 			ViewBag.ErrorDetail = HttpContext.Error.InnerException.Message;
-
-			return View();
+            return View();
 		}
 	}
 }
