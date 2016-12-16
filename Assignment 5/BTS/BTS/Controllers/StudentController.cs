@@ -18,6 +18,7 @@ namespace BTS.Controllers
         //GET search
         public ActionResult Search()
         {
+            m.LoadData();
             return View();
         }
 
