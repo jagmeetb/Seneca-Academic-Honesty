@@ -278,21 +278,65 @@ namespace BTS.Controllers
 				return false;
 			}
 		}
+        //******************************************************************************************************************************//
+        //******************************************************************************************************************************//
+        public IncidentWithDetails IncidentAdd(IncidentAdd newItem)
+        {
+            var mystudent = ds.Students.SingleOrDefault(s => s.studentId == newItem.StudentId);
+            var instruct = ds.Instructors.SingleOrDefault(e => e.name == newItem.InstructorName);
+            var myCourse = ds.Courses.SingleOrDefault(c => c.courseCode == newItem.coursecode);
 
+            //one of them wasn't found
+            if (mystudent == null || instruct == null || myCourse == null)
+            {
+                return null;
+            }
+            //student name + number dont match
+            else if (mystudent.name != newItem.StudentName)
+            {
+                return null;
+            }
+            else
+            {
+                //create the incident
+                Incident incident = new Incident();
+                incident.dateReported = newItem.IncidentDate;
+                incident.description = newItem.description;
+                incident.Instructor = instruct;
+                incident.Students.Add(mystudent);
+                incident.status = "open";
+
+                ds.Incidents.Add(incident);
+
+                ds.SaveChanges();
+                return Mapper.Map<IncidentWithDetails>(incident);
+            }
+
+
+            // Attempt to add the new item
+            var addedItem = ds.Incidents.Add(Mapper.Map<Incident>(newItem));
+         
+            ds.SaveChanges();
+
+            return (addedItem == null) ? null : Mapper.Map<IncidentWithDetails>(addedItem);
+        }
+        // ############################################################
+
+
+        // ############################################################
         public IEnumerable<IncidentBase> IncidentGetAll()
         {
             var x = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
             return x;
         }
-
+        // ############################################################
         public IncidentWithDetails IncidentGetOne(int id)
         {
             var o = ds.Incidents.Include("Instructor").Include("Students").SingleOrDefault(a => a.Id == id);
 
             return (o == null) ? null : Mapper.Map<IncidentWithDetails>(o);
         }
-
-
+        // ############################################################
         public IncidentBase IncidentGetById(int id)
         {
             // Attempt to fetch the object
@@ -301,7 +345,7 @@ namespace BTS.Controllers
             // Return the result, or null if not found
             return (o == null) ? null : Mapper.Map<IncidentBase>(o);
         }
-
+        // ############################################################
         public IncidentWithDetails IncidentEditForm(IncidentEditForm newItem)
         {
             // Attempt to fetch the object
@@ -323,7 +367,7 @@ namespace BTS.Controllers
                 return Mapper.Map<IncidentWithDetails>(o);
             }
         }
-
+        // ############################################################
         public IEnumerable<StudentBase> StudentSearch(StudentSearch newItem)
         {
            // var o = ds.Students.SingleOrDefault(a => a.name == newItem.searchTerm);
@@ -337,8 +381,8 @@ namespace BTS.Controllers
                 IEnumerable<StudentBase> x = Mapper.Map<IEnumerable<StudentBase>>(o);
                 return x;
             }
-        } 
-
+        }
+        // ############################################################
         public IncidentWithDetails IncidentEdit(IncidentEdit newItem)
         {
             var o = ds.Incidents.Include("Students").Include("Instructor").SingleOrDefault(a => a.Id == newItem.Id);
@@ -375,11 +419,13 @@ namespace BTS.Controllers
             }
         }
     }
+    //******************************************************************************************************************************//
+    //******************************************************************************************************************************//
 
-	// New "UserAccount" class for the authenticated user
-	// Includes many convenient members to make it easier to render user account info
-	// Study the properties and methods, and think about how you could use it
-	public class UserAccount
+    // New "UserAccount" class for the authenticated user
+    // Includes many convenient members to make it easier to render user account info
+    // Study the properties and methods, and think about how you could use it
+    public class UserAccount
 	{
 		// Constructor, pass in the security principal
 		public UserAccount(ClaimsPrincipal user)

@@ -1,8 +1,6 @@
 ﻿//
 // author: Jagmeet
 //
-
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +9,56 @@ using System.Web;
 
 namespace BTS.Controllers
 {
+    public class IncidentAdd
+    {
+        public IncidentAdd()
+        {
+            IncidentDate = DateTime.Now;
+        }
+        [Required]
+        public int id { get; set; }
+
+        [Required]
+        [Display(Name = "Incident Date")]
+        [DataType(DataType.Date)]
+        public DateTime IncidentDate { get; set; }
+
+        [Required, StringLength(100)]
+        [Display(Name = "Student Name")]
+        public string StudentName { get; set; }
+
+        [Required, StringLength(100)]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
+        [RegularExpression(@"^[0-9]{9}")]
+        [Display(Name = "Student Id Number")]
+        public string StudentId { get; set; }
+
+        public int InstructorId { get; set; }
+
+        [Required, StringLength(100)]
+        [Display(Name = "Instructor Name")]
+        public string InstructorName { get; set; }
+
+        [Required, StringLength(100)]
+        [Display(Name = "Course Name")]
+        [RegularExpression(@"^[A-Z]{3}[0-9]{3}")]
+        public string coursecode { get; set; }
+
+        [Required]
+        [StringLength(10000)]
+        [DataType(DataType.MultilineText)]
+        public string description { get; set; } 
+    }
+
+    public class IncidentAddForm : IncidentAdd  
+    {
+        public IncidentAddForm()
+        {
+            //StudentIds = new List<string>();
+            //StudentNames = new List<string>();
+        }
+        
+    }
     public class IncidentEditForm
     {
         public IncidentEditForm()

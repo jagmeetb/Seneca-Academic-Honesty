@@ -21,6 +21,37 @@ namespace BTS.Controllers
             return View(m.IncidentGetAll());
         }
 
+        // GET: Incident/Create
+        public ActionResult Create()
+        {
+            // Create a form
+            var form = new IncidentAddForm();
+            
+            return View(form);
+        }
+        // ############################################################
+        // POST: Incident/Create
+        [HttpPost]
+        public ActionResult Create(IncidentAdd newItem)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(newItem);
+            }
+
+            // Process the input
+            var addedItem = m.IncidentAdd(newItem);
+
+            if (addedItem == null)
+            {
+                return RedirectToAction("Create", AutoMapper.Mapper.Map<IncidentAddForm>(newItem));
+            }
+            else
+            {
+                return RedirectToAction("Details", new { id = addedItem.Id });
+            }
+        }
+        // ############################################################
         // GET: Incident/Details/5
         public ActionResult Details(int? id)
         {
@@ -35,30 +66,7 @@ namespace BTS.Controllers
                 return View(o);
             }
         }
-
-        /*
-        // GET: Incident/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Incident/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        */
+        // ############################################################
         // GET: Incident/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -98,8 +106,7 @@ namespace BTS.Controllers
                 //return View();
             }
         }
-
-        
+        // ############################################################
         // POST: Incident/Edit/5
         [HttpPost]
         public ActionResult Edit(int ? id, IncidentEdit newItem)
@@ -146,7 +153,7 @@ namespace BTS.Controllers
              return View();
          }
      }*/
-
+        // ############################################################
         /*
         // GET: Incident/Delete/5
         public ActionResult Delete(int id)
