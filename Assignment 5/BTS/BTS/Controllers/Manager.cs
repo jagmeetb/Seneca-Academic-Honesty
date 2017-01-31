@@ -288,12 +288,12 @@ namespace BTS.Controllers
             var instruct = ds.Instructors.SingleOrDefault(e => e.name == newItem.InstructorName);
             var myCourse = ds.Courses.SingleOrDefault(c => c.courseCode == newItem.coursecode);
 
-            //one of them wasn't found
+            //one of them wasn't found from Database
             if (mystudent == null || instruct == null || myCourse == null)
             {
                 return null;
             }
-            //student name + number dont match
+            //student name + number dont match what is on Database
             else if (mystudent.name != newItem.StudentName)
             {
                 return null;
