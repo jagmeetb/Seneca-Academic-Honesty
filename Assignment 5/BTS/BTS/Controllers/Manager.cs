@@ -22,12 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Net.Mail;
 // new...
 using AutoMapper;
 using BTS.Models;
 using System.Security.Claims;
-using System.Net;
 
 namespace BTS.Controllers
 {
@@ -311,24 +309,16 @@ namespace BTS.Controllers
                 ds.Incidents.Add(incident);
 
                 ds.SaveChanges();
-
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                smtpClient.EnableSsl = true;
-
-                MailMessage msg = new MailMessage();
-                msg.To.Add(mystudent.emailAddress);
-                msg.Subject = "Seneca Academic Honesty Notice";
-
-                string body = "Hello " + mystudent.name;
-                body += "\n\n";
-                body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it";
-              
-                msg.Body = body;
-
-                smtpClient.Send(msg);
-
                 return Mapper.Map<IncidentWithDetails>(incident);
             }
+
+
+            // Attempt to add the new item
+            var addedItem = ds.Incidents.Add(Mapper.Map<Incident>(newItem));
+         
+            ds.SaveChanges();
+
+            return (addedItem == null) ? null : Mapper.Map<IncidentWithDetails>(addedItem);
         }
         // ############################################################
 
