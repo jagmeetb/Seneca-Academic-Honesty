@@ -417,7 +417,6 @@ namespace BTS.Controllers
 			return View();
 		}
 
-		//
 		// GET: /Account/ResetPasswordConfirmation
 		[AllowAnonymous]
 		public ActionResult ResetPasswordConfirmation()
@@ -425,7 +424,6 @@ namespace BTS.Controllers
 			return View();
 		}
 
-		//
 		// POST: /Account/ExternalLogin
 		[HttpPost]
 		[AllowAnonymous]
@@ -436,7 +434,6 @@ namespace BTS.Controllers
 			return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
 		}
 
-		//
 		// GET: /Account/SendCode
 		[AllowAnonymous]
 		public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
@@ -451,7 +448,6 @@ namespace BTS.Controllers
 			return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
 		}
 
-		//
 		// POST: /Account/SendCode
 		[HttpPost]
 		[AllowAnonymous]
