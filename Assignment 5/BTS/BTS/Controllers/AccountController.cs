@@ -140,7 +140,7 @@ namespace BTS.Controllers
 		}
 
 		// ############################################################
-
+        
 		//
 		// GET: /Account/Login
 		[AllowAnonymous]
@@ -265,7 +265,6 @@ namespace BTS.Controllers
 			return View(form);
 		}
 
-		//
 		// POST: /Account/Register
 		[HttpPost]
 		[AllowAnonymous]
