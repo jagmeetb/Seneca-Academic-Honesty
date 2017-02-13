@@ -300,7 +300,7 @@ namespace BTS.Controllers
             }
             else
             {
-                //create the incident
+                //create incident
                 Incident incident = new Incident();
                 incident.dateReported = newItem.IncidentDate;
                 incident.description = newItem.description;
@@ -312,6 +312,7 @@ namespace BTS.Controllers
 
                 ds.SaveChanges();
 
+                //After saving in DB send email
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
 
