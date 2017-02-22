@@ -50,6 +50,14 @@ namespace BTS.Controllers
         [StringLength(10000)]
         [DataType(DataType.MultilineText)]
         public string description { get; set; } 
+
+        [Required]
+        [Display(Name = "Program")]
+        public string program { get; set; }
+
+        [Required]
+        [Display(Name = "Campus")]
+        public string campus { get; set; }
     }
 
     [Authorize]
@@ -83,6 +91,8 @@ namespace BTS.Controllers
         public ICollection<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
         public string InstructorName { get; set; }
+        public string program { get; set; }
+        public string campus { get; set; }
     }
 
     [Authorize]
@@ -121,6 +131,11 @@ namespace BTS.Controllers
         public DateTime dateReported { get; set; }
         [Display(Name = "Status")]
         public string status { get; set; }
+        [Display(Name = "Program")]
+        public string program { get; set; }
+        [Display(Name = "Campus")]
+        public string campus { get; set; }
+
     }
 
 

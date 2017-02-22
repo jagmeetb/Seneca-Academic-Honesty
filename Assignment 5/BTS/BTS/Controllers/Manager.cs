@@ -315,6 +315,37 @@ namespace BTS.Controllers
                 //After saving in DB send email
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
+                MailMessage msg = new MailMessage();
+                msg.To.Add(mystudent.emailAddress);
+                msg.Subject = "Seneca Academic Honesty Notice";
+                string body = "Hello " + mystudent.name;
+                body += "\n\n";
+                body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it.";
+                msg.Body = body;
+                smtpClient.Send(msg);
+
+
+                msg = new MailMessage();
+                msg.To.Add(mystudent.emailAddress);
+                msg.Subject = "Seneca Academic Honesty Notice";
+                body = "Hello " + instruct.name;
+                body += "\n\n";
+                body += "\tYour Seneca Academic Honesty Report has been successfully recorded to our database.";
+                msg.Body = body;
+                smtpClient.Send(msg);
+
+                msg = new MailMessage();
+                msg.To.Add(mystudent.emailAddress);
+                msg.Subject = "Seneca Academic Honesty Notice";
+                body = "Hello Academic Honesty Chair of " + incident.campus;
+                body += "\n\n";
+                body += "\tAn Academic Honesty report has recently been submitted. Please login to the site to check it.";
+                msg.Body = body;
+                smtpClient.Send(msg);
+
+                //After saving in DB send email
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient.EnableSsl = true;
 
                 MailMessage msg = new MailMessage();
                 msg.To.Add(mystudent.emailAddress);
@@ -331,12 +362,25 @@ namespace BTS.Controllers
                 return Mapper.Map<IncidentWithDetails>(incident);
             }
         }
+        
         // ############################################################
 
 
         // ############################################################
         public IEnumerable<IncidentBase> IncidentGetAll()
         {
+            
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.EnableSsl = true;
+
+            MailMessage msg = new MailMessage();
+            msg.To.Add("jsbhamber2@myseneca.ca");
+            msg.Subject = "test";
+            msg.Body = "test body";
+
+            smtpClient.Send(msg);
+
             var x = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
             return x;
         }

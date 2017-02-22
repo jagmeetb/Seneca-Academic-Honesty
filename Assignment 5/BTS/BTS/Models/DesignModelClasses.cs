@@ -38,6 +38,8 @@ namespace BTS.Models
         public DateTime dateReported { get; set; }
         public string description { get; set; }
         public string status { get; set; }
+        public string program { get; set; }
+        public string campus { get; set; }
 
         public ICollection<Student> Students { get; set; }
         public Instructor Instructor { get; set; }
