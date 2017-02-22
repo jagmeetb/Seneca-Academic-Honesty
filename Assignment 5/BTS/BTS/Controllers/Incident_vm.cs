@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace BTS.Controllers
 {
+    [Authorize]
     public class IncidentAdd
     {
         public IncidentAdd()
@@ -50,6 +52,7 @@ namespace BTS.Controllers
         public string description { get; set; } 
     }
 
+    [Authorize]
     public class IncidentAddForm : IncidentAdd  
     {
         public IncidentAddForm()
@@ -59,6 +62,7 @@ namespace BTS.Controllers
         }
         
     }
+    [Authorize]
     public class IncidentEditForm
     {
         public IncidentEditForm()
@@ -81,6 +85,7 @@ namespace BTS.Controllers
         public string InstructorName { get; set; }
     }
 
+    [Authorize]
     public class IncidentEdit
     {
         public IncidentEdit()
@@ -100,6 +105,7 @@ namespace BTS.Controllers
         public int InstructorId { get; set; }
     }
 
+
     public class IncidentBase
     {
         public IncidentBase()
@@ -116,6 +122,7 @@ namespace BTS.Controllers
         [Display(Name = "Status")]
         public string status { get; set; }
     }
+
 
     public class IncidentWithDetails : IncidentBase
     {

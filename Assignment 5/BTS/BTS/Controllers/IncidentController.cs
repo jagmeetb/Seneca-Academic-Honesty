@@ -22,6 +22,7 @@ namespace BTS.Controllers
         }
 
         // GET: Incident/Create
+        [Authorize]
         public ActionResult Create()
         {
             // Create a form
@@ -31,6 +32,7 @@ namespace BTS.Controllers
         }
         // ############################################################
         // POST: Incident/Create
+        [Authorize]
         [HttpPost]
         public ActionResult Create(IncidentAdd newItem)
         {
@@ -68,6 +70,7 @@ namespace BTS.Controllers
         }
         // ############################################################
         // GET: Incident/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             var o = m.IncidentGetOne(id.GetValueOrDefault());
@@ -108,6 +111,7 @@ namespace BTS.Controllers
         }
         // ############################################################
         // POST: Incident/Edit/5
+        [Authorize]
         [HttpPost]
         public ActionResult Edit(int ? id, IncidentEdit newItem)
         {

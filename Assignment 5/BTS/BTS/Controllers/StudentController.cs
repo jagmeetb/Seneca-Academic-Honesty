@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace BTS.Controllers
 {
+    [Authorize]
     public class StudentController : Controller
     {
         private Manager m = new Manager();
@@ -22,6 +23,7 @@ namespace BTS.Controllers
         }
 
         //POST search
+        [Authorize]
         [HttpPost]
         public ActionResult Search(int? id, StudentSearch newItem)
         {
