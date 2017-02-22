@@ -369,18 +369,6 @@ namespace BTS.Controllers
         // ############################################################
         public IEnumerable<IncidentBase> IncidentGetAll()
         {
-            
-
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-            smtpClient.EnableSsl = true;
-
-            MailMessage msg = new MailMessage();
-            msg.To.Add("jsbhamber2@myseneca.ca");
-            msg.Subject = "test";
-            msg.Body = "test body";
-
-            smtpClient.Send(msg);
-
             var x = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
             return x;
         }
