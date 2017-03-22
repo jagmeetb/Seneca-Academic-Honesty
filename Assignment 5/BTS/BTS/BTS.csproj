@@ -273,6 +273,10 @@
     <Content Include="Views\Student\Search.cshtml" />
     <Content Include="Views\Student\SearchPost.cshtml" />
     <Content Include="Views\Incident\Create.cshtml" />
+    <Content Include="Views\Incident\Students.cshtml" />
+    <Content Include="Views\Incident\Partial\NewStudentRow.cshtml" />
+    <Content Include="Views\Incident\Search.cshtml" />
+    <Content Include="Views\Incident\SearchPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

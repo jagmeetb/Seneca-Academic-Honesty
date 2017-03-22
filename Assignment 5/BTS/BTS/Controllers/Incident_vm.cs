@@ -49,7 +49,7 @@ namespace BTS.Controllers
         [Required]
         [StringLength(10000)]
         [DataType(DataType.MultilineText)]
-        public string description { get; set; } 
+        public string description { get; set; }
 
         [Required]
         [Display(Name = "Program")]
@@ -61,14 +61,14 @@ namespace BTS.Controllers
     }
 
     [Authorize]
-    public class IncidentAddForm : IncidentAdd  
+    public class IncidentAddForm : IncidentAdd
     {
         public IncidentAddForm()
         {
             //StudentIds = new List<string>();
             //StudentNames = new List<string>();
         }
-        
+
     }
     [Authorize]
     public class IncidentEditForm
@@ -123,7 +123,7 @@ namespace BTS.Controllers
             dateReported = DateTime.Now;
         }
 
-        
+
         public int Id { get; set; }
         [Display(Name = "Description")]
         public string description { get; set; }
@@ -151,4 +151,18 @@ namespace BTS.Controllers
         public InstructorBase Instructor { get; set; }
         public ICollection<StudentBase> Students { get; set; }
     }
+
+    public class IncidentSearch
+    {
+        public IncidentSearch()
+        {
+            options = new List<string>();
+        }
+        public int Id { get; set; }
+        [Required]
+        public string searchTerm { get; set; }
+        public SelectList searchFilter { get; set; }
+        public ICollection<string> options { get; set; }
+    }
 }
+

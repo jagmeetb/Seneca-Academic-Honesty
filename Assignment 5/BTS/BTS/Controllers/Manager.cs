@@ -31,64 +31,64 @@ using System.Net;
 
 namespace BTS.Controllers
 {
-	public class Manager
-	{
-		// Reference to the data context
-		private ApplicationDbContext ds = new ApplicationDbContext();
+    public class Manager
+    {
+        // Reference to the data context
+        private ApplicationDbContext ds = new ApplicationDbContext();
 
-		// Declare a property to hold the user account for the current request
-		// Can use this property here in the Manager class to control logic and flow
-		// Can also use this property in a controller 
-		// Can also use this property in a view; for best results, 
-		// near the top of the view, add this statement:
-		// var userAccount = new ConditionalMenu.Controllers.UserAccount(User as System.Security.Claims.ClaimsPrincipal);
-		// Then, you can use "userAccount" anywhere in the view to render content
-		public UserAccount UserAccount { get; private set; }
+        // Declare a property to hold the user account for the current request
+        // Can use this property here in the Manager class to control logic and flow
+        // Can also use this property in a controller 
+        // Can also use this property in a view; for best results, 
+        // near the top of the view, add this statement:
+        // var userAccount = new ConditionalMenu.Controllers.UserAccount(User as System.Security.Claims.ClaimsPrincipal);
+        // Then, you can use "userAccount" anywhere in the view to render content
+        public UserAccount UserAccount { get; private set; }
 
-		public Manager()
-		{
-			// If necessary, add constructor code here
+        public Manager()
+        {
+            // If necessary, add constructor code here
 
-			// Initialize the UserAccount property
-			UserAccount = new UserAccount(HttpContext.Current.User as ClaimsPrincipal);
+            // Initialize the UserAccount property
+            UserAccount = new UserAccount(HttpContext.Current.User as ClaimsPrincipal);
 
-			// Turn off the Entity Framework (EF) proxy creation features
-			// We do NOT want the EF to track changes - we'll do that ourselves
-			ds.Configuration.ProxyCreationEnabled = false;
+            // Turn off the Entity Framework (EF) proxy creation features
+            // We do NOT want the EF to track changes - we'll do that ourselves
+            ds.Configuration.ProxyCreationEnabled = false;
 
-			// Also, turn off lazy loading...
-			// We want to retain control over fetching related objects
-			ds.Configuration.LazyLoadingEnabled = false;
-		}
+            // Also, turn off lazy loading...
+            // We want to retain control over fetching related objects
+            ds.Configuration.LazyLoadingEnabled = false;
+        }
 
-		// ############################################################
-		// RoleClaim
+        // ############################################################
+        // RoleClaim
 
-		public List<string> RoleClaimGetAllStrings()
-		{
-			return ds.RoleClaims.OrderBy(r => r.Name).Select(r => r.Name).ToList();
-		}
+        public List<string> RoleClaimGetAllStrings()
+        {
+            return ds.RoleClaims.OrderBy(r => r.Name).Select(r => r.Name).ToList();
+        }
 
-		// Add methods below
-		// Controllers will call these methods
-		// Ensure that the methods accept and deliver ONLY view model objects and collections
-		// The collection return type is almost always IEnumerable<T>
+        // Add methods below
+        // Controllers will call these methods
+        // Ensure that the methods accept and deliver ONLY view model objects and collections
+        // The collection return type is almost always IEnumerable<T>
 
-		// Suggested naming convention: Entity + task/action
-		// For example:
-		// ProductGetAll()
-		// ProductGetById()
-		// ProductAdd()
-		// ProductEdit()
-		// ProductDelete()
-        
-		// Add some programmatically-generated objects to the data store
-		// Can write one method, or many methods - your decision
-		// The important idea is that you check for existing data first
-		// Call this method from a controller action/method
+        // Suggested naming convention: Entity + task/action
+        // For example:
+        // ProductGetAll()
+        // ProductGetById()
+        // ProductAdd()
+        // ProductEdit()
+        // ProductDelete()
 
-		public bool LoadData()
-		{/*
+        // Add some programmatically-generated objects to the data store
+        // Can write one method, or many methods - your decision
+        // The important idea is that you check for existing data first
+        // Call this method from a controller action/method
+
+        public bool LoadData()
+        {/*
 			// User name
 			var user = HttpContext.Current.User.Identity.Name;
 
@@ -105,21 +105,22 @@ namespace BTS.Controllers
 				//ds.SaveChanges();
 				//done = true;
 			}*/
-      //    RemoveDatabase();
-       //     RemoveData();
+         //    RemoveDatabase();
+         //     RemoveData();
             if (loadDataInstructor())
             {
                 if (loadDataCourse())
                 {
-                    if (loadDataStudents()){
+                    if (loadDataStudents())
+                    {
                         loadDataIncidents();
                     }
                 }
             }
 
             ds.SaveChanges();
-			return true;
-		}
+            return true;
+        }
 
         public bool loadDataCourse()
         {
@@ -202,7 +203,7 @@ namespace BTS.Controllers
             ds.SaveChanges();
             return true;
         }
-        
+
         public bool loadDataIncidents()
         {
             if (ds.Incidents.Count() > 0) { return false; }
@@ -236,14 +237,14 @@ namespace BTS.Controllers
         }
 
         public bool RemoveData()
-		{
-			try
-			{
-				foreach (var e in ds.RoleClaims)
-				{
-					ds.Entry(e).State = System.Data.Entity.EntityState.Deleted;
-				}
-				ds.SaveChanges();
+        {
+            try
+            {
+                foreach (var e in ds.RoleClaims)
+                {
+                    ds.Entry(e).State = System.Data.Entity.EntityState.Deleted;
+                }
+                ds.SaveChanges();
 
                 foreach (var e in ds.Courses)
                 {
@@ -262,24 +263,24 @@ namespace BTS.Controllers
                     ds.Entry(e).State = System.Data.Entity.EntityState.Deleted;
                 }
                 return true;
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
-		public bool RemoveDatabase()
-		{
-			try
-			{
-				return ds.Database.Delete();
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
+        public bool RemoveDatabase()
+        {
+            try
+            {
+                return ds.Database.Delete();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         //******************************************************************************************************************************//
         //******************************************************************************************************************************//
         public IncidentWithDetails IncidentAdd(IncidentAdd newItem)
@@ -307,6 +308,8 @@ namespace BTS.Controllers
                 incident.Instructor = instruct;
                 incident.Students.Add(mystudent);
                 incident.status = "open";
+                incident.program = newItem.program;
+                incident.campus = newItem.campus;
 
                 ds.Incidents.Add(incident);
 
@@ -344,17 +347,17 @@ namespace BTS.Controllers
                 smtpClient.Send(msg);
 
                 //After saving in DB send email
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
 
-                MailMessage msg = new MailMessage();
+                msg = new MailMessage();
                 msg.To.Add(mystudent.emailAddress);
                 msg.Subject = "Seneca Academic Honesty Notice";
 
-                string body = "Hello " + mystudent.name;
+                body = "Hello " + mystudent.name;
                 body += "\n\n";
                 body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it";
-              
+
                 msg.Body = body;
 
                 smtpClient.Send(msg);
@@ -362,7 +365,7 @@ namespace BTS.Controllers
                 return Mapper.Map<IncidentWithDetails>(incident);
             }
         }
-        
+
         // ############################################################
 
 
@@ -413,7 +416,7 @@ namespace BTS.Controllers
         // ############################################################
         public IEnumerable<StudentBase> StudentSearch(StudentSearch newItem)
         {
-           // var o = ds.Students.SingleOrDefault(a => a.name == newItem.searchTerm);
+            // var o = ds.Students.SingleOrDefault(a => a.name == newItem.searchTerm);
             var o = ds.Students.Where(a => a.name.Contains(newItem.searchTerm));
             if (o == null)
             {
@@ -424,6 +427,24 @@ namespace BTS.Controllers
                 IEnumerable<StudentBase> x = Mapper.Map<IEnumerable<StudentBase>>(o);
                 return x;
             }
+        }
+        public IEnumerable<IncidentBase> IncidentSearch(IncidentSearch newItem)
+        {
+            var o = ds.Incidents.Where(a => a.description.Contains(newItem.searchTerm));
+            var p = ds.Incidents.Where(a => a.Instructor.name.Contains(newItem.searchTerm));
+            //var q;
+            
+            if (o == null)
+            {
+                return null;
+            }
+            else
+            {
+                IEnumerable<IncidentBase> x = Mapper.Map<IEnumerable<IncidentBase>>(o);
+                return x;
+            }
+
+
         }
         // ############################################################
         public IncidentWithDetails IncidentEdit(IncidentEdit newItem)
@@ -457,6 +478,28 @@ namespace BTS.Controllers
                         }
                     }
                 }
+
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient.EnableSsl = true;
+                MailMessage msg = new MailMessage();
+                string body;
+
+                Student myStudent;
+                foreach (var student in o.Students)
+                {
+                    myStudent = ds.Students.SingleOrDefault(s => s.studentId == student.studentId);
+                    if (myStudent != null)
+                    {
+                        msg.To.Add(myStudent.emailAddress);
+                        msg.Subject = "Seneca Academic Honesty Notice";
+                        body = "Hello " + myStudent.name;
+                        body += "\n\n";
+                        body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it.";
+                        msg.Body = body;
+                        smtpClient.Send(msg);
+                    }
+                }
+
                 ds.SaveChanges();
                 return Mapper.Map<IncidentWithDetails>(o);
             }
@@ -469,75 +512,75 @@ namespace BTS.Controllers
     // Includes many convenient members to make it easier to render user account info
     // Study the properties and methods, and think about how you could use it
     public class UserAccount
-	{
-		// Constructor, pass in the security principal
-		public UserAccount(ClaimsPrincipal user)
-		{
-			if (HttpContext.Current.Request.IsAuthenticated)
-			{
-				Principal = user;
+    {
+        // Constructor, pass in the security principal
+        public UserAccount(ClaimsPrincipal user)
+        {
+            if (HttpContext.Current.Request.IsAuthenticated)
+            {
+                Principal = user;
 
-				// Extract the role claims
-				RoleClaims = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+                // Extract the role claims
+                RoleClaims = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
 
-				// User name
-				Name = user.Identity.Name;
+                // User name
+                Name = user.Identity.Name;
 
-				// Extract the given name(s); if null or empty, then set an initial value
-				string gn = user.Claims.SingleOrDefault(c => c.Type == ClaimTypes.GivenName).Value;
-				if (string.IsNullOrEmpty(gn)) { gn = "(empty given name)"; }
-				GivenName = gn;
+                // Extract the given name(s); if null or empty, then set an initial value
+                string gn = user.Claims.SingleOrDefault(c => c.Type == ClaimTypes.GivenName).Value;
+                if (string.IsNullOrEmpty(gn)) { gn = "(empty given name)"; }
+                GivenName = gn;
 
-				// Extract the surname; if null or empty, then set an initial value
-				string sn = user.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Surname).Value;
-				if (string.IsNullOrEmpty(sn)) { sn = "(empty surname)"; }
-				Surname = sn;
+                // Extract the surname; if null or empty, then set an initial value
+                string sn = user.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Surname).Value;
+                if (string.IsNullOrEmpty(sn)) { sn = "(empty surname)"; }
+                Surname = sn;
 
-				IsAuthenticated = true;
-				IsAdmin = user.HasClaim(ClaimTypes.Role, "Admin") ? true : false;
-			}
-			else
-			{
-				RoleClaims = new List<string>();
-				Name = "anonymous";
-				GivenName = "Unauthenticated";
-				Surname = "Anonymous";
-				IsAuthenticated = false;
-				IsAdmin = false;
-			}
+                IsAuthenticated = true;
+                IsAdmin = user.HasClaim(ClaimTypes.Role, "Admin") ? true : false;
+            }
+            else
+            {
+                RoleClaims = new List<string>();
+                Name = "anonymous";
+                GivenName = "Unauthenticated";
+                Surname = "Anonymous";
+                IsAuthenticated = false;
+                IsAdmin = false;
+            }
 
-			NamesFirstLast = $"{GivenName} {Surname}";
-			NamesLastFirst = $"{Surname}, {GivenName}";
-		}
+            NamesFirstLast = $"{GivenName} {Surname}";
+            NamesLastFirst = $"{Surname}, {GivenName}";
+        }
 
-		// Public properties
-		public ClaimsPrincipal Principal { get; private set; }
-		public IEnumerable<string> RoleClaims { get; private set; }
+        // Public properties
+        public ClaimsPrincipal Principal { get; private set; }
+        public IEnumerable<string> RoleClaims { get; private set; }
 
-		public string Name { get; set; }
+        public string Name { get; set; }
 
-		public string GivenName { get; private set; }
-		public string Surname { get; private set; }
+        public string GivenName { get; private set; }
+        public string Surname { get; private set; }
 
-		public string NamesFirstLast { get; private set; }
-		public string NamesLastFirst { get; private set; }
+        public string NamesFirstLast { get; private set; }
+        public string NamesLastFirst { get; private set; }
 
-		public bool IsAuthenticated { get; private set; }
+        public bool IsAuthenticated { get; private set; }
 
-		// Add other role-checking properties here as needed
-		public bool IsAdmin { get; private set; }
+        // Add other role-checking properties here as needed
+        public bool IsAdmin { get; private set; }
 
-		public bool HasRoleClaim(string value)
-		{
-			if (!IsAuthenticated) { return false; }
-			return Principal.HasClaim(ClaimTypes.Role, value) ? true : false;
-		}
+        public bool HasRoleClaim(string value)
+        {
+            if (!IsAuthenticated) { return false; }
+            return Principal.HasClaim(ClaimTypes.Role, value) ? true : false;
+        }
 
-		public bool HasClaim(string type, string value)
-		{
-			if (!IsAuthenticated) { return false; }
-			return Principal.HasClaim(type, value) ? true : false;
-		}
-	}
+        public bool HasClaim(string type, string value)
+        {
+            if (!IsAuthenticated) { return false; }
+            return Principal.HasClaim(type, value) ? true : false;
+        }
+    }
 
 }
