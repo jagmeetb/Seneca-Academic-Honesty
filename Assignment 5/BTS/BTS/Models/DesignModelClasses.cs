@@ -40,6 +40,7 @@ namespace BTS.Models
         public string status { get; set; }
         public string program { get; set; }
         public string campus { get; set; }
+        public string offence { get; set; }
 
         public ICollection<Student> Students { get; set; }
         public Instructor Instructor { get; set; }

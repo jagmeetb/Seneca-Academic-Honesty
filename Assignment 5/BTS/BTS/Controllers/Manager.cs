@@ -177,7 +177,7 @@ namespace BTS.Controllers
             {
                 Courses = new List<Course> { BTS },
                 name = "Shawn Matthew",
-                emailAddress = "sjmatthew@myseneca.ca",
+                emailAddress = "sjmathew@myseneca.ca",
                 year = "Fall 2016",
                 studentId = "069669142"
             });
@@ -218,7 +218,9 @@ namespace BTS.Controllers
                 description = "plagiarism",
                 status = "open",
                 Students = new List<Student> { jagmeet, shawn },
-                Instructor = eden
+                Instructor = eden,
+                campus = "Seneca@York",
+                program = "BSD"
             });
 
             ds.SaveChanges();
@@ -344,14 +346,14 @@ namespace BTS.Controllers
                 smtpClient.Send(msg);
 
                 //After saving in DB send email
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
 
-                MailMessage msg = new MailMessage();
+                msg = new MailMessage();
                 msg.To.Add(mystudent.emailAddress);
                 msg.Subject = "Seneca Academic Honesty Notice";
 
-                string body = "Hello " + mystudent.name;
+                body = "Hello " + mystudent.name;
                 body += "\n\n";
                 body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it";
               
@@ -457,6 +459,38 @@ namespace BTS.Controllers
                         }
                     }
                 }
+
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient.EnableSsl = true;
+                MailMessage msg = new MailMessage();
+                string body;
+
+                Student myStudent;
+                foreach(var student in o.Students)
+                {
+                    myStudent = ds.Students.SingleOrDefault(s => s.studentId == student.studentId);
+                    if(myStudent != null)
+                    {
+                        msg = new MailMessage();
+                        msg.To.Add(myStudent.emailAddress);
+                        msg.Subject = "Seneca Academic Honesty Notice";
+                        body = "Hello " + myStudent.name;
+                        body += "\n\n";
+                        body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it";
+                        body += "\n\n";
+                        body += "\tYour case has been set to minor.";
+
+                        msg.Body = body;
+
+                        smtpClient.Send(msg);
+                    }
+                }
+
+                // change status to closed
+                newItem.status = "closed";
+
+                o.offence = newItem.OffenceList;
+
                 ds.SaveChanges();
                 return Mapper.Map<IncidentWithDetails>(o);
             }

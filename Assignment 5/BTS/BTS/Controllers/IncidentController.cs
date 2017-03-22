@@ -14,6 +14,15 @@ namespace BTS.Controllers
     public class IncidentController : Controller
     {
         private Manager m = new Manager();
+
+        public List<Offence> Offences { get; set; }
+
+        public IncidentController()
+        {
+            // Load the offence minor
+            LoadOffence();
+        }
+
         // GET: Incident
         public ActionResult Index()
         {
@@ -27,7 +36,7 @@ namespace BTS.Controllers
         {
             // Create a form
             var form = new IncidentAddForm();
-            
+            form.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
             return View(form);
         }
         // ############################################################
@@ -81,6 +90,8 @@ namespace BTS.Controllers
             }
             else
             {
+                
+
                 // Create and configure an "edit form"
 
                 // Notice that o is a IncidentBase object
@@ -103,6 +114,12 @@ namespace BTS.Controllers
                 editForm.StudentIds.Add("");
                 editForm.StudentNames.Add("");
 
+                editForm.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
+                
+                if (o.offence == "Minor")
+                {
+                    //editForm.OffenceList.SelectedValue = 0;
+                }
 
 
                 return View(editForm);
@@ -130,7 +147,10 @@ namespace BTS.Controllers
 
             newItem.StudentIds.Remove("");
             newItem.StudentNames.Remove("");
-           
+
+            string offenceID = newItem.OffenceList;
+            newItem.OffenceList = this.Offences.Where(a => a.Id == int.Parse(offenceID)).First().offenceTerm;
+
             // Attempt to do the update
             var editedItem = m.IncidentEdit(newItem);
 
@@ -145,6 +165,26 @@ namespace BTS.Controllers
                 // Show the details view, which will have the updated data
                 return RedirectToAction("details", new { id = newItem.Id });
             }
+        }
+
+        public ActionResult ShowEditIncidentForm()
+        {
+            // Attention 27 - Create and configure a view model object
+
+            var form = new IncidentEditForm();
+
+            // Attention 28 - SelectList objects
+            form.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
+
+            // Attention 29 - Carefully study the PlanCourses view
+            return View(form);
+        }
+
+        private void LoadOffence()
+        {
+            Offences = new List<Offence>();
+            Offences.Add(new Offence { Id = 1001, offenceTerm = "Minor"});
+            Offences.Add(new Offence { Id = 1002, offenceTerm = "Major" });
         }
         /* try
          {

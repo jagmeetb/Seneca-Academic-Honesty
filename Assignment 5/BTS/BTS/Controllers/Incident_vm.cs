@@ -58,6 +58,9 @@ namespace BTS.Controllers
         [Required]
         [Display(Name = "Campus")]
         public string campus { get; set; }
+
+        [Display(Name = "Offence")]
+        public SelectList OffenceList { get; set; }
     }
 
     [Authorize]
@@ -68,6 +71,8 @@ namespace BTS.Controllers
             //StudentIds = new List<string>();
             //StudentNames = new List<string>();
         }
+
+
         
     }
     [Authorize]
@@ -81,6 +86,8 @@ namespace BTS.Controllers
 
         [Required]
         public int id { get; set; }
+
+        public DateTime IncidentDate { get; set; }
         [Required]
         public string description { get; set; }
         [Required]
@@ -93,6 +100,11 @@ namespace BTS.Controllers
         public string InstructorName { get; set; }
         public string program { get; set; }
         public string campus { get; set; }
+        
+        [Display(Name = "Offence")]
+        public SelectList OffenceList { get; set; }
+        
+        //public bool minor { get; set; }
     }
 
     [Authorize]
@@ -113,6 +125,17 @@ namespace BTS.Controllers
         [Display(Name = "Student Name")]
         public ICollection<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
+
+        [Display(Name = "Offence")]
+        public string OffenceList { get; set; }
+    }
+
+    // View model class for a minor offence entity
+    public class Offence
+    {
+        public int Id { get; set; }
+
+        public string offenceTerm { get; set; }
     }
 
 
@@ -135,6 +158,7 @@ namespace BTS.Controllers
         public string program { get; set; }
         [Display(Name = "Campus")]
         public string campus { get; set; }
+        public string offence { get; set; }
 
     }
 
