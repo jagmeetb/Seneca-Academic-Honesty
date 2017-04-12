@@ -13,6 +13,49 @@ namespace BTS.Controllers
 {
     public class IncidentController : Controller
     {
+
+       private Manager m = new Manager();
+
+        public List<Offence> Offences { get; set; }
+
+        public IncidentController()
+        {
+            // Load the offence minor
+            LoadOffence();
+        }
+
+        // GET: Search
+        public ActionResult Search()
+        {
+            var form = new IncidentSearch();
+            form.options.Add("All");
+            form.options.Add("Description");
+            form.options.Add("Student");
+            form.options.Add("Instructor");
+            form.options.Add("Course");
+            return View(form);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Search(int? id, IncidentSearch newItem)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("search");
+            }
+
+            var foundIncidents = m.IncidentSearch(newItem);
+            if (foundIncidents == null || foundIncidents.Count() == 0)
+            {
+                return RedirectToAction("search");
+            }
+
+
+            return View("SearchPost", foundIncidents);
+        }
+
+
         private Manager m = new Manager();
 
         public List<Offence> Offences { get; set; }
@@ -29,6 +72,8 @@ namespace BTS.Controllers
             m.LoadData();
             return View(m.IncidentGetAll());
         }
+
+
 
         // GET: Incident/Create
         [Authorize]

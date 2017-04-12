@@ -1,0 +1,56 @@
+﻿@model IEnumerable<BTS.Controllers.IncidentBase>
+
+@{
+    ViewBag.Title = "SearchPost";
+}
+
+<h2>SearchPost</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dateReported)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.program)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.campus)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateReported)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.program)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.campus)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
