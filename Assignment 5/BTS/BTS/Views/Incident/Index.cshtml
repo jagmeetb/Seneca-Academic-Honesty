@@ -1,5 +1,5 @@
 ﻿<!--
-Author: Jagmeet
+Author: Jagmeet,mona
 -->
 
 
@@ -7,6 +7,8 @@ Author: Jagmeet
 
 @{
     ViewBag.Title = "List of Incidents";
+    var userAccount = new BTS.Controllers.UserAccount(User as System.Security.Claims.ClaimsPrincipal);
+
 }
 
 <h2>List of Incidents</h2>
@@ -38,7 +40,12 @@ Author: Jagmeet
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id })
+            @Html.ActionLink("Details", "Details", new { id = item.Id })
+            @if (item.status.ToLower() == "open" && item.offence.ToLower() == "minor")
+            {
+                <text>| </text>
+                @Html.ActionLink("Respond", "incidentResponse", new { id = item.Id })
+            }
         </td>
     </tr>
 }

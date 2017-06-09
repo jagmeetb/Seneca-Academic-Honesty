@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Details";
+    var userAccount = new BTS.Controllers.UserAccount(User as System.Security.Claims.ClaimsPrincipal);
+
 }
 
 <h2>Details</h2>
@@ -45,6 +47,7 @@
             @Html.DisplayFor(model => model.Instructor.emailAddress)
         </dd>
 
+
         @foreach (var item in Model.Students)
         {
             <dt>
@@ -61,6 +64,16 @@
                 @Html.DisplayFor(modelItem => item.emailAddress)
             </dd>
         }
+        <dt>
+            @Html.DisplayNameFor(model => model.IncidentDoc)
+        </dt>
+
+        <dd>
+            <img src="/file/@Model.Id" class="img-responsive" />
+            @*@Html.DisplayFor(model => model.IncidentFile)*@
+        </dd>
+
+    </dl>
     </dl>
 </div>
 <p>

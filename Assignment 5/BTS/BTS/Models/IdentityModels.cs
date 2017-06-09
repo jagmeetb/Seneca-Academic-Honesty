@@ -35,6 +35,7 @@ namespace BTS.Models
         public DbSet<Instructor> Instructors { get; set; }
 
 
+
         // Turn OFF cascade delete, which is (unfortunately) the default setting
         // for Code First generated databases
         // For most apps, we do NOT want automatic cascade delete behaviour
@@ -56,6 +57,8 @@ namespace BTS.Models
 			return new ApplicationDbContext();
 		}
 
+        public System.Data.Entity.DbSet<BTS.Controllers.StudentSearch> StudentSearches { get; set; }
 
+        public System.Data.Entity.DbSet<BTS.Controllers.StudentBase> StudentBases { get; set; }
     }
 }

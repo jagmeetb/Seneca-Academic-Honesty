@@ -28,6 +28,9 @@ using AutoMapper;
 using BTS.Models;
 using System.Security.Claims;
 using System.Net;
+using System.IO;
+using System.Web.UI.WebControls;
+
 
 namespace BTS.Controllers
 {
@@ -107,6 +110,7 @@ namespace BTS.Controllers
 			}*/
       //    RemoveDatabase();
        //     RemoveData();
+       
             if (loadDataInstructor())
             {
                 if (loadDataCourse())
@@ -177,7 +181,7 @@ namespace BTS.Controllers
             {
                 Courses = new List<Course> { BTS },
                 name = "Shawn Matthew",
-                emailAddress = "sjmathew@myseneca.ca",
+                emailAddress = "sjmatthew@myseneca.ca",
                 year = "Fall 2016",
                 studentId = "069669142"
             });
@@ -219,8 +223,9 @@ namespace BTS.Controllers
                 status = "open",
                 Students = new List<Student> { jagmeet, shawn },
                 Instructor = eden,
+                program = "BSD",
                 campus = "Seneca@York",
-                program = "BSD"
+                offence = "minor"
             });
 
             ds.SaveChanges();
@@ -284,11 +289,68 @@ namespace BTS.Controllers
 		}
         //******************************************************************************************************************************//
         //******************************************************************************************************************************//
+        public IncidentDocs IncidentDocGetById(int id)
+        {
+            var o = ds.Incidents.Find(id);
+
+            return (o == null) ? null : Mapper.Map<IncidentDocs>(o);
+        }
+
+        public bool closeIncident(int id, string message)
+        {
+            var o = ds.Incidents.Find(id);
+            var p = ds.Instructors.Find(o.Instructor.Id);
+            if (o != null)
+            {
+                o.status = "closed";
+
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient.EnableSsl = true;
+                MailMessage msg = new MailMessage();
+
+                msg.To.Add(p.emailAddress);
+                msg.Subject = "Seneca Academic Honesty Notice";
+                string body = "Hello " + p.name;
+                body += "\n\n";
+                body += "\tYour Seneca Academic Honesty report for \"" + o.description + "\" has been closed.";
+                body += "\nHere is the report:";
+                body += "\n\n" + message;
+                msg.Body = body;
+                smtpClient.Send(msg);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
         public IncidentWithDetails IncidentAdd(IncidentAdd newItem)
         {
             var mystudent = ds.Students.SingleOrDefault(s => s.studentId == newItem.StudentId);
             var instruct = ds.Instructors.SingleOrDefault(e => e.name == newItem.InstructorName);
             var myCourse = ds.Courses.SingleOrDefault(c => c.courseCode == newItem.coursecode);
+            //var addedItem = ds.Incidents.Add(Mapper.Map<Incident>(newItem));
+
+
+           // var streamLength = FileUpload.InputStream.Length;
+           // var fileBytes  = new byte[streamLength];
+           // FileUpload.InputStream.Read(fileBytes, 0, fileBytes.Length);
+
+            //byte[] docBytes = null;
+
+            if (newItem.DocUpload != null)
+            {
+
+ //               docBytes = new byte[newItem.DocUpload.ContentLength];
+     //           newItem.DocUpload.InputStream.Read(docBytes, 0, newItem.DocUpload.ContentLength);
+
+                // Then, configure the new object's properties
+  //              addedItem.Doc = docBytes;
+    //            addedItem.DocContentType = newItem.DocUpload.ContentType;
+            }
 
             //one of them wasn't found from Database
             if (mystudent == null || instruct == null || myCourse == null)
@@ -301,14 +363,26 @@ namespace BTS.Controllers
                 return null;
             }
             else
-            {
-                //create incident
+            {             //create incident
                 Incident incident = new Incident();
                 incident.dateReported = newItem.IncidentDate;
                 incident.description = newItem.description;
                 incident.Instructor = instruct;
                 incident.Students.Add(mystudent);
+//                incident.Doc = docBytes;
+//                incident.DocContentType = newItem.DocUpload.ContentType;
+
                 incident.status = "open";
+                incident.campus = newItem.campus;
+                incident.program = newItem.program;
+                if (newItem.isMinor)
+                {
+                    incident.offence = "Minor";
+                }
+                else
+                {
+                    incident.offence = "Major";
+                }
 
                 ds.Incidents.Add(incident);
 
@@ -346,26 +420,9 @@ namespace BTS.Controllers
                 msg.Body = body;
                 smtpClient.Send(msg);
 
-                //After saving in DB send email
-                smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                smtpClient.EnableSsl = true;
-
-                msg = new MailMessage();
-                msg.To.Add(mystudent.emailAddress);
-                msg.Subject = "Seneca Academic Honesty Notice";
-
-                body = "Hello " + mystudent.name;
-                body += "\n\n";
-                body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it";
-              
-                msg.Body = body;
-
-                smtpClient.Send(msg);
-
                 return Mapper.Map<IncidentWithDetails>(incident);
             }
         }
-        
         // ############################################################
 
 
@@ -375,35 +432,23 @@ namespace BTS.Controllers
             var x = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
             return x;
         }
+        
+        public IEnumerable<IncidentBase> IncidentGetAllOpen()
+        {
+
+            var babcadv = Mapper.Map<IEnumerable<Incident>>(ds.Incidents);
+            var w = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
+            var x = w.Where(a => a.offence.ToLower() == "minor");
+            var y = x.Where(a => a.status.ToLower() == "open");
+
+            IEnumerable<IncidentBase> z = Mapper.Map<IEnumerable<IncidentBase>>(y);
+            return z;
+        }
+
         // ############################################################
         public IncidentWithDetails IncidentGetOne(int id)
         {
             var o = ds.Incidents.Include("Instructor").Include("Students").SingleOrDefault(a => a.Id == id);
-
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-            smtpClient.EnableSsl = true;
-            MailMessage msg = new MailMessage();
-            string body;
-
-            Instructor myInstructor;
-            myInstructor = ds.Instructors.SingleOrDefault(i => i.Id == o.Id);
-
-            if (myInstructor != null)
-            {
-                msg.To.Add(myInstructor.emailAddress);
-                msg.Subject = "Seneca Academic Honesty Notice";
-                body = "Hello Professor " + myInstructor.name;
-                body += "\n\n";
-                body += "\tYou should give the student a 0.";
-                body += "\n\n";
-                body += "\tThey deserve to fail.";
-                body += "\n\n";
-                body += "\tGood Bye";
-
-                msg.Body = body;
-
-                smtpClient.Send(msg);
-            }
 
             return (o == null) ? null : Mapper.Map<IncidentWithDetails>(o);
         }
@@ -453,6 +498,27 @@ namespace BTS.Controllers
                 return x;
             }
         }
+
+        public IEnumerable<IncidentBase> IncidentSearch(IncidentSearch newItem)
+        {
+            var o = ds.Incidents.Where(a => a.description.Contains(newItem.searchTerm));
+            var p = ds.Incidents.Where(a => a.Instructor.name.Contains(newItem.searchTerm));
+            var q = ds.Students.Where(a => a.name.Contains(newItem.searchTerm));
+            o = o.Concat(p);
+
+            if (o == null)
+            {
+                return null;
+            }
+            else
+            {
+                IEnumerable<IncidentBase> x = Mapper.Map<IEnumerable<IncidentBase>>(o);
+                return x;
+            }
+
+
+        }
+
         // ############################################################
         public IncidentWithDetails IncidentEdit(IncidentEdit newItem)
         {
@@ -491,27 +557,6 @@ namespace BTS.Controllers
                 MailMessage msg = new MailMessage();
                 string body;
 
-                /*Student myStudent;
-                foreach(var student in o.Students)
-                {
-                    myStudent = ds.Students.SingleOrDefault(s => s.studentId == student.studentId);
-                    if(myStudent != null)
-                    {
-                        msg = new MailMessage();
-                        msg.To.Add(myStudent.emailAddress);
-                        msg.Subject = "Seneca Academic Honesty Notice";
-                        body = "Hello " + myStudent.name;
-                        body += "\n\n";
-                        body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it";
-                        body += "\n\n";
-                        body += "\tYour case has been set to minor.";
-
-                        msg.Body = body;
-
-                        smtpClient.Send(msg);
-                    }
-                }*/
-
                 Instructor myInstructor;
                 myInstructor = ds.Instructors.SingleOrDefault(i => i.Id == newItem.Id);
 
@@ -529,12 +574,9 @@ namespace BTS.Controllers
 
                     smtpClient.Send(msg);
                 }
-                
 
-                // change status to closed
                 newItem.status = "closed";
 
-                o.offence = newItem.OffenceList;
 
                 ds.SaveChanges();
                 return Mapper.Map<IncidentWithDetails>(o);

@@ -146,13 +146,16 @@ namespace BTS.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Login(string returnUrl)
 		{
-			// ############################################################
-			// Account/Login code was modified
-			// Its purpose is to create a new 'admin' user (with a password of 'Password123!')
-			// the first time that the login view/page appears
-			// The method's signature was also changed to run asynchronously
+            // ############################################################
+            // Account/Login code was modified
+            // Its purpose is to create a new 'admin' user (with a password of 'Password123!')
+            // the first time that the login view/page appears
+            // The method's signature was also changed to run asynchronously
 
-			if (UserManager.Users.Count() == 0)
+            Manager m = new Manager();
+            m.LoadData();
+
+            if (UserManager.Users.Count() == 0)
 			{
 				var user = new ApplicationUser { UserName = "admin@example.com", Email = "admin@example.com" };
 				var result = await UserManager.CreateAsync(user, "Password123!");
@@ -248,18 +251,21 @@ namespace BTS.Controllers
 		[AllowAnonymous]
 		public ActionResult Register()
 		{
-			// Claims-aware "Register" method to display an HTML Form
-			// Make sure you study the Views/Account/Register.cshtml view code
-			// It includes new input elements to gather name and claim data
+            // Claims-aware "Register" method to display an HTML Form
+            // Make sure you study the Views/Account/Register.cshtml view code
+            // It includes new input elements to gather name and claim data
 
-			// Define your custom role claims here
-			// However, in a real-world in-production app, you would likely maintain
-			//   a valid list of custom claims in persistent storage somewhere
-			Manager m = new Manager();
-			var roles = m.RoleClaimGetAllStrings();
+            // Define your custom role claims here
+            // However, in a real-world in-production app, you would likely maintain
+            //   a valid list of custom claims in persistent storage somewhere
 
-			// Define a register form
-			var form = new RegisterViewModelForm();
+            Manager m = new Manager();
+            m.LoadData();
+			//var roles = m.RoleClaimGetAllStrings();
+            var roles = new List<string> { "Student", "Faculty", "Coordinator Admin" };
+
+            // Define a register form
+            var form = new RegisterViewModelForm();
 			form.RoleList = new MultiSelectList(roles);
 
 			return View(form);
@@ -279,14 +285,14 @@ namespace BTS.Controllers
 
 				if (result.Succeeded)
 				{
-					// ############################################################
-					// Claims-aware "Register" method to handle user-submitted data
-					// GivenName and Surname are claims - we gather them on the HTML Form
-					// The RegisterViewModel class was modified, to add these properties
-					// We also configure some "role" claims
+                    // ############################################################
+                    // Claims-aware "Register" method to handle user-submitted data
+                    // GivenName and Surname are claims - we gather them on the HTML Form
+                    // The RegisterViewModel class was modified, to add these properties
+                    // We also configure some "role" claims
 
-					// Add claims
-					await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Email, model.Email));
+                    // Add claims
+                    await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Email, model.Email));
 					await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.GivenName, model.GivenName));
 					await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Surname, model.Surname));
 					await UserManager.AddClaimAsync(user.Id, new Claim(ClaimTypes.Role, "User"));

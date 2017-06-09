@@ -10,7 +10,6 @@ using System.Web.Mvc;
 
 namespace BTS.Controllers
 {
-    [Authorize]
     public class IncidentAdd
     {
         public IncidentAdd()
@@ -49,7 +48,11 @@ namespace BTS.Controllers
         [Required]
         [StringLength(10000)]
         [DataType(DataType.MultilineText)]
-        public string description { get; set; } 
+        public string description { get; set; }
+
+        [Display(Name = "Incident File")]
+        [DataType(DataType.Upload)]
+        public HttpPostedFileBase DocUpload { get; set; }
 
         [Required]
         [Display(Name = "Program")]
@@ -59,23 +62,65 @@ namespace BTS.Controllers
         [Display(Name = "Campus")]
         public string campus { get; set; }
 
-        [Display(Name = "Offence")]
-        public SelectList OffenceList { get; set; }
+        public bool isMinor { get; set; }
     }
 
-    [Authorize]
-    public class IncidentAddForm : IncidentAdd  
+    public class IncidentAddForm //: IncidentAdd  
     {
         public IncidentAddForm()
         {
+            IncidentDate = DateTime.Now;
             //StudentIds = new List<string>();
             //StudentNames = new List<string>();
         }
+        [Required]
+        public int id { get; set; }
 
+        [Required]
+        [Display(Name = "Incident Date")]
+        [DataType(DataType.Date)]
+        public DateTime IncidentDate { get; set; }
 
-        
+        [Required, StringLength(100)]
+        [Display(Name = "Student Name")]
+        public string StudentName { get; set; }
+
+        [Required, StringLength(100)]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
+        [RegularExpression(@"^[0-9]{9}")]
+        [Display(Name = "Student Id Number")]
+        public string StudentId { get; set; }
+
+        public int InstructorId { get; set; }
+
+        [Required, StringLength(100)]
+        [Display(Name = "Instructor Name")]
+        public string InstructorName { get; set; }
+
+        [Required, StringLength(100)]
+        [Display(Name = "Course Name")]
+        [RegularExpression(@"^[A-Z]{3}[0-9]{3}")]
+        public string coursecode { get; set; }
+
+        [Required]
+        [Display(Name = "Program")]
+        public string program { get; set; }
+
+        [Required]
+        [Display(Name = "Campus")]
+        public string campus { get; set; }
+
+        [Required]
+        [StringLength(10000)]
+        [DataType(DataType.MultilineText)]
+        public string description { get; set; }
+
+        [Display(Name = "Incident File")]
+        [DataType(DataType.Upload)]
+        public string DocUpload { get; set; }
+
+        public bool isMinor { get; set; }
     }
-    [Authorize]
     public class IncidentEditForm
     {
         public IncidentEditForm()
@@ -86,8 +131,6 @@ namespace BTS.Controllers
 
         [Required]
         public int id { get; set; }
-
-        public DateTime IncidentDate { get; set; }
         [Required]
         public string description { get; set; }
         [Required]
@@ -98,16 +141,11 @@ namespace BTS.Controllers
         public ICollection<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
         public string InstructorName { get; set; }
+
         public string program { get; set; }
         public string campus { get; set; }
-        
-        [Display(Name = "Offence")]
-        public SelectList OffenceList { get; set; }
-        
-        //public bool minor { get; set; }
     }
 
-    [Authorize]
     public class IncidentEdit
     {
         public IncidentEdit()
@@ -125,9 +163,6 @@ namespace BTS.Controllers
         [Display(Name = "Student Name")]
         public ICollection<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
-
-        [Display(Name = "Offence")]
-        public string OffenceList { get; set; }
     }
 
     // View model class for a minor offence entity
@@ -137,7 +172,6 @@ namespace BTS.Controllers
 
         public string offenceTerm { get; set; }
     }
-
 
     public class IncidentBase
     {
@@ -158,10 +192,18 @@ namespace BTS.Controllers
         public string program { get; set; }
         [Display(Name = "Campus")]
         public string campus { get; set; }
+
+        [Display(Name = "Incident Document")]
+        public string IncidentDoc   
+        {
+            get
+            {
+                return $"/file/{Id}";
+            }
+        }
+
         public string offence { get; set; }
-
     }
-
 
     public class IncidentWithDetails : IncidentBase
     {
@@ -174,5 +216,42 @@ namespace BTS.Controllers
         }
         public InstructorBase Instructor { get; set; }
         public ICollection<StudentBase> Students { get; set; }
+    }
+
+    public class IncidentDocs
+    {
+        public int Id { get; set; }
+        public string DocContentType { get; set; }
+        public byte[] Doc { get; set; }
+    }
+
+    public class IncidentSearch
+    {
+        public IncidentSearch()
+        {
+            options = new List<string>();
+        }
+        public int Id { get; set; }
+        [Required]
+        public string searchTerm { get; set; }
+        public SelectList searchFilter { get; set; }
+        public ICollection<string> options { get; set; }
+    }
+
+    public class IncidentResponse
+    {
+        [Required]
+        public int incidentID { get; set; }
+
+        [Required]
+        public int instructorID { get; set; }
+
+        [Required]
+        public string description { get; set; }
+
+        
+        [StringLength(10000)]
+        [DataType(DataType.MultilineText)]
+        public string response { get; set; }
     }
 }

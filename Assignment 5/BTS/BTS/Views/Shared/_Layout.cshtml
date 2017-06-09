@@ -1,5 +1,5 @@
 ﻿<!--
-Author: Shawn Matthews    
+Author: Shawn Matthews, mona    
 -->
 <!DOCTYPE html>
 <html>
@@ -27,10 +27,23 @@ Author: Shawn Matthews
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
+
+                    @if (userAccount.HasRoleClaim("Faculty"))
+                    {
                     <li>@Html.ActionLink("Report Incident", "Create", "Incident")</li>
-                    <li>@Html.ActionLink("View Incidents", "Index", "Incident")</li>
-                    <li>@Html.ActionLink("Search Students", "Search", "Student")</li> 
-                    <li>@Html.ActionLink("Search", "Search", "Incident")</li>
+                    }
+                    @if ((userAccount.HasRoleClaim("Faculty")) || (userAccount.HasRoleClaim("Coordinator Admin")))
+                    {
+                        <li>@Html.ActionLink("View Incidents", "Index", "Incident")</li>
+                    }
+                    @if (userAccount.HasRoleClaim("Coordinator Admin"))
+                    {
+                        <li>@Html.ActionLink("Search Students", "Search", "Student")</li>
+                    }
+                    @if (userAccount.HasRoleClaim("Coordinator Admin"))
+                    {
+                        <li>@Html.ActionLink("Search", "Search", "Incident")</li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

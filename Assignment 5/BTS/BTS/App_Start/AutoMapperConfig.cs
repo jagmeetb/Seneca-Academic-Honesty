@@ -33,7 +33,9 @@ namespace BTS
             Mapper.CreateMap<Controllers.IncidentEditForm, Controllers.IncidentEdit>();
             Mapper.CreateMap<Controllers.IncidentEdit, Controllers.IncidentEditForm>();
             Mapper.CreateMap<Controllers.IncidentAdd, Controllers.IncidentAddForm>();
+            Mapper.CreateMap<Controllers.IncidentAdd, Models.Incident>();
             Mapper.CreateMap<Controllers.IncidentAddForm, Controllers.IncidentAdd>();
+            Mapper.CreateMap<Models.Incident, Controllers.IncidentDocsController>();
 
 
             Mapper.CreateMap<Models.Instructor, Controllers.InstructorBase>();

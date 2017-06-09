@@ -6,8 +6,7 @@ using System.Web.Mvc;
 
 namespace BTS.Controllers
 {
-    [Authorize]
-    public class HomeController : Controller
+	public class HomeController : Controller
 	{
 		// Reference to the manager object
 		Manager m = new Manager();

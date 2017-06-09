@@ -1,5 +1,5 @@
 ﻿<!--
-Author: Jagmeet
+Author: Jagmeet,mona
 -->
 
 
@@ -7,6 +7,7 @@ Author: Jagmeet
 
 @{
     ViewBag.Title = "Edit";
+    var userAccount = new BTS.Controllers.UserAccount(User as System.Security.Claims.ClaimsPrincipal);
 
 }
 
@@ -63,21 +64,6 @@ Author: Jagmeet
                 @Html.ValidationMessageFor(model => model.InstructorName, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div>
-            @Html.LabelFor(model => model.OffenceList, htmlAttributes: new { @class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @foreach (var term in Model.OffenceList)
-                {
-                    <div class="radio">
-                        <label><input type="radio" name="OffenceList" value="@term.Value" />@term.Text</label>
-                    </div>
-                }
-                @Html.ValidationMessageFor(model => model.OffenceList, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <br>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

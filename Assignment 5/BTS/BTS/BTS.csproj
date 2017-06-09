@@ -167,18 +167,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\App_Start\AutoMapperConfig.cs" />
-    <Compile Include="Controllers\App_Start\BundleConfig.cs" />
-    <Compile Include="Controllers\App_Start\FilterConfig.cs" />
-    <Compile Include="Controllers\App_Start\IdentityConfig.cs" />
-    <Compile Include="Controllers\App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Course_vm.cs" />
     <Compile Include="Controllers\CustomAuthorizeAttributes.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncidentController.cs" />
+    <Compile Include="Controllers\IncidentDocsController.cs" />
     <Compile Include="Controllers\Incident_vm.cs" />
     <Compile Include="Controllers\Instructor_vm.cs" />
     <Compile Include="Controllers\LoadDataController.cs" />
@@ -200,6 +201,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="FileProperty.csproj" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -273,13 +275,14 @@
     <Content Include="Views\Student\Search.cshtml" />
     <Content Include="Views\Student\SearchPost.cshtml" />
     <Content Include="Views\Incident\Create.cshtml" />
-    <Content Include="Views\Incident\Students.cshtml" />
-    <Content Include="Views\Incident\Partial\NewStudentRow.cshtml" />
     <Content Include="Views\Incident\Search.cshtml" />
     <Content Include="Views\Incident\SearchPost.cshtml" />
+    <Content Include="Views\Incident\Students.cshtml" />
+    <Content Include="Views\Incident\incidentResponse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\IncidentDocs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -288,6 +291,9 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>FileProperty.csproj</ApplicationManifest>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

@@ -13,15 +13,31 @@ namespace BTS.Controllers
 {
     public class IncidentController : Controller
     {
-
-       private Manager m = new Manager();
-
+        private Manager m = new Manager();
         public List<Offence> Offences { get; set; }
 
-        public IncidentController()
+
+        // GET: incidentResponse
+        [Authorize(Roles = "Coordinator Admin")]
+        public ActionResult incidentResponse(int? id)
         {
-            // Load the offence minor
-            LoadOffence();
+            var form = new IncidentResponse();
+            form.incidentID = id.GetValueOrDefault();
+            var x = m.IncidentGetOne(id.GetValueOrDefault());
+            form.instructorID = x.Instructor.Id;
+            form.description = x.description;
+            return View(form);
+        }
+
+        [HttpPost]
+        public ActionResult incidentResponse(int? id, IncidentResponse newItem)
+        {
+            bool result = m.closeIncident(newItem.incidentID, newItem.response);
+            if (result)
+            {
+
+            }
+            return View(m.IncidentGetAllOpen());
         }
 
         // GET: Search
@@ -56,38 +72,32 @@ namespace BTS.Controllers
         }
 
 
-        private Manager m = new Manager();
-
-        public List<Offence> Offences { get; set; }
-
-        public IncidentController()
-        {
-            // Load the offence minor
-            LoadOffence();
-        }
 
         // GET: Incident
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
         public ActionResult Index()
         {
             m.LoadData();
+            if (User.IsInRole("Coordinator Admin"))
+            {
+                return View(m.IncidentGetAllOpen());
+            }
             return View(m.IncidentGetAll());
         }
 
-
-
         // GET: Incident/Create
-        [Authorize]
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
         public ActionResult Create()
         {
             // Create a form
             var form = new IncidentAddForm();
-            form.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
+            
             return View(form);
         }
         // ############################################################
         // POST: Incident/Create
-        [Authorize]
         [HttpPost]
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
         public ActionResult Create(IncidentAdd newItem)
         {
             if (!ModelState.IsValid)
@@ -109,7 +119,9 @@ namespace BTS.Controllers
         }
         // ############################################################
         // GET: Incident/Details/5
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
         public ActionResult Details(int? id)
+
         {
             var o = m.IncidentGetOne(id.GetValueOrDefault());
 
@@ -124,7 +136,7 @@ namespace BTS.Controllers
         }
         // ############################################################
         // GET: Incident/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
         public ActionResult Edit(int? id)
         {
             var o = m.IncidentGetOne(id.GetValueOrDefault());
@@ -135,8 +147,6 @@ namespace BTS.Controllers
             }
             else
             {
-                
-
                 // Create and configure an "edit form"
 
                 // Notice that o is a IncidentBase object
@@ -159,13 +169,12 @@ namespace BTS.Controllers
                 editForm.StudentIds.Add("");
                 editForm.StudentNames.Add("");
 
-                editForm.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
-                
+                //editForm.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
+
                 if (o.offence == "Minor")
                 {
                     //editForm.OffenceList.SelectedValue = 0;
                 }
-
 
                 return View(editForm);
                 //return View();
@@ -173,8 +182,8 @@ namespace BTS.Controllers
         }
         // ############################################################
         // POST: Incident/Edit/5
-        [Authorize]
         [HttpPost]
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
         public ActionResult Edit(int ? id, IncidentEdit newItem)
         {
             // Validate the input
@@ -192,10 +201,7 @@ namespace BTS.Controllers
 
             newItem.StudentIds.Remove("");
             newItem.StudentNames.Remove("");
-
-            string offenceID = newItem.OffenceList;
-            newItem.OffenceList = this.Offences.Where(a => a.Id == int.Parse(offenceID)).First().offenceTerm;
-
+           
             // Attempt to do the update
             var editedItem = m.IncidentEdit(newItem);
 
@@ -219,7 +225,7 @@ namespace BTS.Controllers
             var form = new IncidentEditForm();
 
             // Attention 28 - SelectList objects
-            form.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
+            //form.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
 
             // Attention 29 - Carefully study the PlanCourses view
             return View(form);
@@ -228,9 +234,11 @@ namespace BTS.Controllers
         private void LoadOffence()
         {
             Offences = new List<Offence>();
-            Offences.Add(new Offence { Id = 1001, offenceTerm = "Minor"});
+            Offences.Add(new Offence { Id = 1001, offenceTerm = "Minor" });
             Offences.Add(new Offence { Id = 1002, offenceTerm = "Major" });
         }
+
+
         /* try
          {
              // TODO: Add update logic here

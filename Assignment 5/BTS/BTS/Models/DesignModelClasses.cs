@@ -44,6 +44,10 @@ namespace BTS.Models
 
         public ICollection<Student> Students { get; set; }
         public Instructor Instructor { get; set; }
+
+        [StringLength(200)]
+        public string DocContentType { get; set; }
+        public byte[] Doc { get; set; }
     }
 
     public class Instructor
