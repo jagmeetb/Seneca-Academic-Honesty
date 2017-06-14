@@ -298,7 +298,8 @@ namespace BTS.Controllers
 
         public bool closeIncident(int id, string message)
         {
-            var o = ds.Incidents.Find(id);
+
+            var o = ds.Incidents.Include("Instructor").Include("Students").SingleOrDefault(a => a.Id == id);
             var p = ds.Instructors.Find(o.Instructor.Id);
             if (o != null)
             {
@@ -318,6 +319,7 @@ namespace BTS.Controllers
                 msg.Body = body;
                 smtpClient.Send(msg);
 
+                ds.SaveChanges();
                 return true;
             }
             else

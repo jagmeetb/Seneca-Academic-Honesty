@@ -11,7 +11,17 @@ Author: Jagmeet,mona
 
 }
 
-<h2>List of Incidents</h2>
+
+
+@if (User.IsInRole("Coordinator Admin"))
+{
+    <h2>List of Open Incidents</h2>
+    @Html.ActionLink("View all incidents", "Index2", "Incident")
+}
+else
+{
+    <h2>List of Incidents</h2>
+}
 
 <table class="table">
     <tr>

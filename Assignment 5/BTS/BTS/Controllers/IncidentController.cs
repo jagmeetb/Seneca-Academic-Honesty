@@ -32,12 +32,9 @@ namespace BTS.Controllers
         [HttpPost]
         public ActionResult incidentResponse(int? id, IncidentResponse newItem)
         {
-            bool result = m.closeIncident(newItem.incidentID, newItem.response);
-            if (result)
-            {
+            bool result = m.closeIncident(id.GetValueOrDefault(), newItem.response);
 
-            }
-            return View(m.IncidentGetAllOpen());
+            return RedirectToAction("Index");
         }
 
         // GET: Search
@@ -82,6 +79,13 @@ namespace BTS.Controllers
             {
                 return View(m.IncidentGetAllOpen());
             }
+            return View(m.IncidentGetAll());
+        }
+
+        // GET: Incident
+        [Authorize(Roles = "Coordinator Admin")]
+        public ActionResult Index2()
+        {
             return View(m.IncidentGetAll());
         }
 

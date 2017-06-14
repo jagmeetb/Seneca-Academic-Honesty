@@ -279,6 +279,7 @@
     <Content Include="Views\Incident\SearchPost.cshtml" />
     <Content Include="Views\Incident\Students.cshtml" />
     <Content Include="Views\Incident\incidentResponse.cshtml" />
+    <Content Include="Views\Incident\Index2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

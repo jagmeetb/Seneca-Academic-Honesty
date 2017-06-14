@@ -79,4 +79,9 @@
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
+    @if (Model.status.ToLower() == "open" && Model.offence.ToLower() == "minor" && User.IsInRole("Coordinator Admin"))
+    {
+        <text>| </text>
+        @Html.ActionLink("Respond", "incidentResponse", new { id = Model.Id })
+    }
 </p>
