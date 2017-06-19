@@ -19,19 +19,39 @@
     </script>
     -->
 
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#myButton").click(function () {
-            var html = '<div class="form-group" id="studnames">' +
-                '@Html.LabelFor(model => model.StudentName, htmlAttributes: new { @class = "control-label col-md-2" })' +
+
+            var el=document.getElementsByTagName("*");
+            for(i=0;i<el.length;i++)
+                if(el[i].style.display=="none"){
+                    el[i].style.display="";
+                    break;
+                }
+
+        });
+    });
+
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myButton1").click(function () {
+            
+            var rowCount = $("#studnames").length;
+            var html1 = '<div class="form-group" id="studnames">' +
+                @Html.LabelFor(model => model.StudentName, htmlAttributes: new { @class = "control-label col-md-2" })' +
                 '<div class="col-md-10">' +
                     '@Html.EditorFor(model => model.StudentName, new { htmlAttributes = new { @class = "form-control" } })' +
                     '@Html.ValidationMessageFor(model => model.StudentName, "", new { @class = "text-danger" })' +
                 '</div>' +
-            '</div>' +
+            '</div>';
 
 
-            '<div class="form-group" id="studids">' +
+            var html2    = '<div class="form-group" id="studids">' +
                 '@Html.LabelFor(model => model.StudentId, htmlAttributes: new { @class = "control-label col-md-2" })' +
                 '<div class="col-md-10">' +
                     '@Html.EditorFor(model => model.StudentId, new { htmlAttributes = new { @class = "form-control" } })' +
@@ -39,9 +59,9 @@
                 '</div>' +
             '</div>';
 
-            //$("#studnames").append(html);
-            //$("#studids").append(html);
-            $("#students").append(html);
+            $("#studnames").append(html1);
+            $("#studids").append(html2);        
+            //$("#students").append(html);
         });
     });
 
@@ -64,12 +84,14 @@
             </div>
         </div>
 
+        <br /> 
+
         <div id="students">
             <div class="form-group" id="studnames">
                 @Html.LabelFor(model => model.StudentName, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.StudentName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.StudentName, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.StudentName[0], new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.StudentName[0], "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -77,11 +99,36 @@
             <div class="form-group" id="studids">
                 @Html.LabelFor(model => model.StudentId, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.StudentId, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.StudentId, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.StudentId[0], new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.StudentId[0], "", new { @class = "text-danger" }) 
                 </div>
             </div>
         </div>
+
+        @for (int i = 1; i < Model.StudentId.Count(); i++)
+        {
+            <div id="students" style="display:none">
+                <div class="form-group" id="studnames">
+                    @Html.LabelFor(model => model.StudentName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.StudentName[@i], new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.StudentName[@i], "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group" id="studids">
+                    @Html.LabelFor(model => model.StudentId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.StudentId[@i], new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.StudentId[@i], "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        }
+
+        <input type="button" id="myButton" value="Add student" />
+        <br /> 
 
         <div class="form-group">
             @Html.LabelFor(model => model.InstructorName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -140,8 +187,6 @@
                 @Html.ValidationMessageFor(model => model.isMinor, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <input type="button" id="myButton" value="test"/>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

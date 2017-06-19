@@ -95,7 +95,14 @@ namespace BTS.Controllers
         {
             // Create a form
             var form = new IncidentAddForm();
-            
+            form.StudentId = new List<string>();
+            form.StudentName = new List<string>();
+            for (int i = 0; i < 20; i++)
+            {
+                form.StudentId.Add("");
+                form.StudentName.Add("");
+            }
+
             return View(form);
         }
         // ############################################################
@@ -104,10 +111,13 @@ namespace BTS.Controllers
         [Authorize(Roles = "Coordinator Admin , Faculty")]
         public ActionResult Create(IncidentAdd newItem)
         {
+
+
+            /*
             if (!ModelState.IsValid)
             {
-                return View(newItem);
-            }
+                return RedirectToAction("Create", AutoMapper.Mapper.Map<IncidentAddForm>(newItem));
+            }*/
 
             // Process the input
             var addedItem = m.IncidentAdd(newItem);

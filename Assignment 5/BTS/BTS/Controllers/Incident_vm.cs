@@ -15,6 +15,8 @@ namespace BTS.Controllers
         public IncidentAdd()
         {
             IncidentDate = DateTime.Now;
+            StudentId = new List<string>();
+            StudentName = new List<string>();
         }
         [Required]
         public int id { get; set; }
@@ -24,15 +26,15 @@ namespace BTS.Controllers
         [DataType(DataType.Date)]
         public DateTime IncidentDate { get; set; }
 
-        [Required, StringLength(100)]
+        [Required]
         [Display(Name = "Student Name")]
-        public string StudentName { get; set; }
+        public List<string> StudentName { get; set; }
 
-        [Required, StringLength(100)]
+        [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
         [RegularExpression(@"^[0-9]{9}")]
         [Display(Name = "Student Id Number")]
-        public string StudentId { get; set; }
+        public List<string> StudentId { get; set; }
 
         public int InstructorId { get; set; }
 
@@ -70,8 +72,8 @@ namespace BTS.Controllers
         public IncidentAddForm()
         {
             IncidentDate = DateTime.Now;
-            //StudentIds = new List<string>();
-            //StudentNames = new List<string>();
+            StudentId = new List<string>();
+            StudentName = new List<string>();
         }
         [Required]
         public int id { get; set; }
@@ -81,15 +83,15 @@ namespace BTS.Controllers
         [DataType(DataType.Date)]
         public DateTime IncidentDate { get; set; }
 
-        [Required, StringLength(100)]
+        [Required]
         [Display(Name = "Student Name")]
-        public string StudentName { get; set; }
+        public List<string> StudentName { get; set; }
 
-        [Required, StringLength(100)]
+        [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
         [RegularExpression(@"^[0-9]{9}")]
         [Display(Name = "Student Id Number")]
-        public string StudentId { get; set; }
+        public List<string> StudentId { get; set; }
 
         public int InstructorId { get; set; }
 

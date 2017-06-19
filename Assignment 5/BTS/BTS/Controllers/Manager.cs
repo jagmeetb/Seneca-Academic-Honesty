@@ -331,15 +331,24 @@ namespace BTS.Controllers
 
         public IncidentWithDetails IncidentAdd(IncidentAdd newItem)
         {
-            var mystudent = ds.Students.SingleOrDefault(s => s.studentId == newItem.StudentId);
+            ICollection<Student> mystudent = new List<Student>();
+            foreach (var x in newItem.StudentId)
+            {
+                if (x != "")
+                {
+                    mystudent.Add(ds.Students.SingleOrDefault(s => s.studentId == x));
+                }
+            }
+
+            //= ds.Students.SingleOrDefault(s => s.studentId == newItem.StudentId);
             var instruct = ds.Instructors.SingleOrDefault(e => e.name == newItem.InstructorName);
             var myCourse = ds.Courses.SingleOrDefault(c => c.courseCode == newItem.coursecode);
             //var addedItem = ds.Incidents.Add(Mapper.Map<Incident>(newItem));
+            var first = mystudent.First();
 
-
-           // var streamLength = FileUpload.InputStream.Length;
-           // var fileBytes  = new byte[streamLength];
-           // FileUpload.InputStream.Read(fileBytes, 0, fileBytes.Length);
+            // var streamLength = FileUpload.InputStream.Length;
+            // var fileBytes  = new byte[streamLength];
+            // FileUpload.InputStream.Read(fileBytes, 0, fileBytes.Length);
 
             //byte[] docBytes = null;
 
@@ -355,22 +364,32 @@ namespace BTS.Controllers
             }
 
             //one of them wasn't found from Database
+
+            for (int i = 0; i < mystudent.Count(); i++)
+            {
+                if (mystudent.ElementAt(i).name != newItem.StudentName.ElementAt(i))
+                {
+                    return null;
+                }
+            }
+
             if (mystudent == null || instruct == null || myCourse == null)
             {
                 return null;
             }
             //student name + number dont match what is on Database
-            else if (mystudent.name != newItem.StudentName)
-            {
-                return null;
-            }
+
+
             else
             {             //create incident
                 Incident incident = new Incident();
                 incident.dateReported = newItem.IncidentDate;
                 incident.description = newItem.description;
                 incident.Instructor = instruct;
-                incident.Students.Add(mystudent);
+                foreach (var x in mystudent)
+                {
+                    incident.Students.Add(x);
+                }
 //                incident.Doc = docBytes;
 //                incident.DocContentType = newItem.DocUpload.ContentType;
 
@@ -395,17 +414,23 @@ namespace BTS.Controllers
                 smtpClient.EnableSsl = true;
                 MailMessage msg = new MailMessage();
 
-                msg.To.Add(mystudent.emailAddress);
-                msg.Subject = "Seneca Academic Honesty Notice";
-                string body = "Hello " + mystudent.name;
-                body += "\n\n";
-                body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it.";
-                msg.Body = body;
-                smtpClient.Send(msg);
+                string body;
+
+                foreach (var x in mystudent)
+                {
+                    msg.To.Clear();
+                    msg.To.Add(x.emailAddress);
+                    msg.Subject = "Seneca Academic Honesty Notice";
+                    body = "Hello " + x.name;
+                    body += "\n\n";
+                    body += "\tYour Seneca Academic Honesty record has been updated. Please log into the site to check it.";
+                    msg.Body = body;
+                    smtpClient.Send(msg);
+                }
 
 
                 msg = new MailMessage();
-                msg.To.Add(mystudent.emailAddress);
+                msg.To.Add(first.emailAddress);
                 msg.Subject = "Seneca Academic Honesty Notice";
                 body = "Hello " + instruct.name;
                 body += "\n\n";
@@ -414,7 +439,7 @@ namespace BTS.Controllers
                 smtpClient.Send(msg);
 
                 msg = new MailMessage();
-                msg.To.Add(mystudent.emailAddress);
+                msg.To.Add(first.emailAddress);
                 msg.Subject = "Seneca Academic Honesty Notice";
                 body = "Hello Academic Honesty Chair of " + incident.campus;
                 body += "\n\n";
