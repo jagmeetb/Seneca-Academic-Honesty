@@ -138,9 +138,9 @@ namespace BTS.Controllers
         [Required]
         public string status { get; set; }
         [Required]
-        public ICollection<string> StudentIds { get; set; }
+        public List<string> StudentIds { get; set; }
         [Required]
-        public ICollection<string> StudentNames { get; set; }
+        public List<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
         public string InstructorName { get; set; }
 
@@ -161,9 +161,9 @@ namespace BTS.Controllers
         public string status { get; set; }
 
         [Display(Name = "Student ID")]
-        public ICollection<string> StudentIds { get; set; }
+        public List<string> StudentIds { get; set; }
         [Display(Name = "Student Name")]
-        public ICollection<string> StudentNames { get; set; }
+        public List<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
     }
 

@@ -12,6 +12,23 @@ Author: Jagmeet,mona
 }
 
 <h2>Edit</h2>
+<script src="@Url.Content("~/Scripts/jquery-2.2.1.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myButton").click(function () {
+
+            var el=document.getElementsByTagName("*");
+            for(i=0;i<el.length;i++)
+                if(el[i].style.display=="none"){
+                    el[i].style.display="";
+                    break;
+                }
+
+        });
+    });
+
+</script>
 
 
 @using (Html.BeginForm())
@@ -38,23 +55,53 @@ Author: Jagmeet,mona
             </div>
         </div>
 
+        @for (int i = 0; i < Model.StudentIds.Count(); i++)
+        {
+            if (Model.StudentIds[i] != "")
+            {
+                <div id="students">
+                    <div class="form-group" name="StudentIds">
+                        @Html.LabelFor(model => Model.StudentIds, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => Model.StudentIds[@i], new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.StudentIds[@i], "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-        <div class="form-group" name="StudentIds">
-            @Html.LabelFor(model => Model.StudentIds, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => Model.StudentIds, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => Model.StudentIds, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        
-        <div class="form-group">
-            @Html.LabelFor(model => Model.StudentNames, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => Model.StudentNames, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => Model.StudentNames, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => Model.StudentNames, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => Model.StudentNames[@i], new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.StudentNames[@i], "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            }
+            else {
+                <div id="students" style="display:none">
+                    <div class="form-group" name="StudentIds">
+                        @Html.LabelFor(model => Model.StudentIds, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => Model.StudentIds[@i], new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.StudentIds[@i], "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        @Html.LabelFor(model => Model.StudentNames, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => Model.StudentNames[@i], new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => Model.StudentNames[@i], "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+        }
+
+                    <input type="button" id="myButton" value="Add student" />
+                    <br /> 
 
 
         <div class="form-group">

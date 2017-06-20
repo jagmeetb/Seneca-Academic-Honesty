@@ -578,7 +578,7 @@ namespace BTS.Controllers
                         }
                     }
                 }
-
+                /*
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
                 MailMessage msg = new MailMessage();
@@ -603,7 +603,7 @@ namespace BTS.Controllers
                 }
 
                 newItem.status = "closed";
-
+                */
 
                 ds.SaveChanges();
                 return Mapper.Map<IncidentWithDetails>(o);

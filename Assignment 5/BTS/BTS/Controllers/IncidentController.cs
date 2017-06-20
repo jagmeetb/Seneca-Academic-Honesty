@@ -180,8 +180,11 @@ namespace BTS.Controllers
                     editForm.StudentNames.Add(stud.name);
                 }
 
-                editForm.StudentIds.Add("");
-                editForm.StudentNames.Add("");
+                for (int i = 0; i < 20; i++)
+                {
+                    editForm.StudentIds.Add("");
+                    editForm.StudentNames.Add("");
+                }
 
                 //editForm.OffenceList = new SelectList(this.Offences, "Id", "offenceTerm");
 
@@ -213,8 +216,12 @@ namespace BTS.Controllers
                 return RedirectToAction("index");
             }
 
-            newItem.StudentIds.Remove("");
-            newItem.StudentNames.Remove("");
+
+            for (int i = 0; i < newItem.StudentIds.Count(); i++)
+            {
+                newItem.StudentIds.Remove("");
+                newItem.StudentNames.Remove("");
+            }
            
             // Attempt to do the update
             var editedItem = m.IncidentEdit(newItem);
