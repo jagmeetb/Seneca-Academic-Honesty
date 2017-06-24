@@ -119,6 +119,7 @@ namespace BTS.Controllers
 
         [Display(Name = "Incident File")]
         [DataType(DataType.Upload)]
+        [FileExtensions(Extensions = ".pdf", ErrorMessage = "Incorrect file format")]
         public string DocUpload { get; set; }
 
         public bool isMinor { get; set; }
@@ -134,6 +135,7 @@ namespace BTS.Controllers
         [Required]
         public int id { get; set; }
         [Required]
+        [DataType(DataType.MultilineText)]
         public string description { get; set; }
         [Required]
         public string status { get; set; }
@@ -146,6 +148,11 @@ namespace BTS.Controllers
 
         public string program { get; set; }
         public string campus { get; set; }
+
+        [Display(Name = "Incident File")]
+        [DataType(DataType.Upload)]
+        [FileExtensions(Extensions = ".pdf", ErrorMessage = "Incorrect file format")]
+        public string DocUpload { get; set; }
     }
 
     public class IncidentEdit
@@ -159,12 +166,19 @@ namespace BTS.Controllers
         public int Id { get; set; }
         public string description { get; set; }
         public string status { get; set; }
+        public string program { get; set; }
+        public string campus { get; set; }
 
         [Display(Name = "Student ID")]
-        public List<string> StudentIds { get; set; }
+        public List<string> StudentIds { get; set; }    
         [Display(Name = "Student Name")]
         public List<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
+
+        [Display(Name = "Incident File")]
+        [DataType(DataType.Upload)]
+        
+        public HttpPostedFileBase DocUpload { get; set; }
     }
 
     // View model class for a minor offence entity
@@ -196,13 +210,15 @@ namespace BTS.Controllers
         public string campus { get; set; }
 
         [Display(Name = "Incident Document")]
-        public string IncidentDoc   
+        public string IncidentDoc { get; set; }
+            /*
         {
             get
             {
                 return $"/file/{Id}";
             }
-        }
+        }*/
+        
 
         public string offence { get; set; }
     }

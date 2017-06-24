@@ -69,8 +69,17 @@
         </dt>
 
         <dd>
+            @*
             <img src="/file/@Model.Id" class="img-responsive" />
-            @*@Html.DisplayFor(model => model.IncidentFile)*@
+            @Html.DisplayFor(model => model.IncidentDoc)*@
+            @if (Model.IncidentDoc != null)
+            {
+                @Html.ActionLink("Download", "pdfDownload", new { id = Model.Id })
+            }
+            else
+            {
+                <text>No document attached</text>
+            }
         </dd>
 
     </dl>

@@ -36,7 +36,7 @@ namespace BTS.Controllers
                    }*/
         // GET: Photo/5
         // Attention - 8 - Uses attribute routing
-        [Route("photo/{id}")]
+        [Route("file/{id}")]
         public ActionResult Details(int? id)
         {
             // Attempt to get the matching object
@@ -53,6 +53,27 @@ namespace BTS.Controllers
                 return File(o.Doc, o.DocContentType);
             }
         }
+
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
+        public ActionResult pdfDownload(int? id)
+        {
+            var o = m.IncidentDocGetById(id.GetValueOrDefault());
+            if (o != null)
+            {
+                var cd = new System.Net.Mime.ContentDisposition
+                {
+                    FileName = "download.pdf",
+                    Inline = false
+                };
+                Response.AppendHeader("Content-Disposition", cd.ToString());
+                return File(o.Doc, o.DocContentType);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         /*
     // GET: IncidentDocs/Create
     public ActionResult Create()

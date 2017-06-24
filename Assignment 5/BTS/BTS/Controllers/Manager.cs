@@ -293,7 +293,18 @@ namespace BTS.Controllers
         {
             var o = ds.Incidents.Find(id);
 
-            return (o == null) ? null : Mapper.Map<IncidentDocs>(o);
+            IncidentDocs x = new IncidentDocs();
+            x.Doc = o.Doc;
+            x.DocContentType = o.DocContentType;
+
+            if (x.Doc == null)
+            {
+                return null;
+            }
+            else
+            {
+                return x;
+            }
         }
 
         public bool closeIncident(int id, string message)
@@ -346,22 +357,11 @@ namespace BTS.Controllers
             //var addedItem = ds.Incidents.Add(Mapper.Map<Incident>(newItem));
             var first = mystudent.First();
 
-            // var streamLength = FileUpload.InputStream.Length;
+            // var streamLength = newItem.DocUpload.InputStream.Length;
             // var fileBytes  = new byte[streamLength];
-            // FileUpload.InputStream.Read(fileBytes, 0, fileBytes.Length);
+            // newItem.DocUpload.InputStream.Read(fileBytes, 0, fileBytes.Length);
 
-            //byte[] docBytes = null;
 
-            if (newItem.DocUpload != null)
-            {
-
- //               docBytes = new byte[newItem.DocUpload.ContentLength];
-     //           newItem.DocUpload.InputStream.Read(docBytes, 0, newItem.DocUpload.ContentLength);
-
-                // Then, configure the new object's properties
-  //              addedItem.Doc = docBytes;
-    //            addedItem.DocContentType = newItem.DocUpload.ContentType;
-            }
 
             //one of them wasn't found from Database
 
@@ -404,6 +404,21 @@ namespace BTS.Controllers
                 {
                     incident.offence = "Major";
                 }
+
+
+                byte[] docBytes = null;
+
+                if (newItem.DocUpload != null)
+                {
+
+                    docBytes = new byte[newItem.DocUpload.ContentLength];
+                    newItem.DocUpload.InputStream.Read(docBytes, 0, newItem.DocUpload.ContentLength);
+
+                    // Then, configure the new object's properties
+                    incident.Doc = docBytes;
+                    incident.DocContentType = newItem.DocUpload.ContentType;
+                }
+
 
                 ds.Incidents.Add(incident);
 
@@ -477,7 +492,27 @@ namespace BTS.Controllers
         {
             var o = ds.Incidents.Include("Instructor").Include("Students").SingleOrDefault(a => a.Id == id);
 
-            return (o == null) ? null : Mapper.Map<IncidentWithDetails>(o);
+            var p = Mapper.Map<IncidentWithDetails>(o);
+            //p.IncidentDoc = File(o.Doc, o.DocContentType);
+            if (o.Doc == null)
+            {
+                p.IncidentDoc = null;
+            }
+            else
+            {
+                p.IncidentDoc = $"/file/{id}";
+            }
+
+            if (p == null)
+            {
+                return null;
+            }
+            else
+            {
+                return p;
+            }
+
+            //return (o == null) ? null : Mapper.Map<IncidentWithDetails>(o);
         }
         // ############################################################
         public IncidentBase IncidentGetById(int id)
@@ -561,6 +596,20 @@ namespace BTS.Controllers
                 o.Students.Clear();
 
                 o.description = newItem.description;
+                o.campus = newItem.campus;
+                o.program = newItem.program;
+
+                
+                if (newItem.DocUpload != null)
+                {
+                    byte[] docBytes = null;
+                    docBytes = new byte[newItem.DocUpload.ContentLength];
+                    newItem.DocUpload.InputStream.Read(docBytes, 0, newItem.DocUpload.ContentLength);
+
+                    // Then, configure the new object's properties
+                    o.Doc = docBytes;
+                    o.DocContentType = newItem.DocUpload.ContentType;
+                }
 
                 if (newItem.status.ToLower() == "open" || newItem.status.ToLower() == "closed")
                 {

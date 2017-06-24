@@ -119,6 +119,24 @@ namespace BTS.Controllers
                 return RedirectToAction("Create", AutoMapper.Mapper.Map<IncidentAddForm>(newItem));
             }*/
 
+            if (newItem.DocUpload.ContentType != null && newItem.DocUpload.ContentType != "application/pdf")
+            {
+                IncidentAddForm form = new IncidentAddForm();
+                form.StudentId = new List<string>();
+                form.StudentName = new List<string>();
+
+                form.campus = newItem.campus;
+                form.coursecode = newItem.coursecode;
+                form.description = newItem.description;
+                form.IncidentDate = newItem.IncidentDate;
+                form.InstructorName = newItem.InstructorName;
+                form.isMinor = newItem.isMinor;
+                form.program = newItem.program;
+                form.StudentName = newItem.StudentName;
+                form.StudentId = newItem.StudentId;
+                return View(form);
+            }
+
             // Process the input
             var addedItem = m.IncidentAdd(newItem);
 
@@ -148,6 +166,29 @@ namespace BTS.Controllers
                 return View(o);
             }
         }
+
+        [Authorize(Roles = "Coordinator Admin , Faculty")]
+        public ActionResult pdfDownload(int? id)
+        {
+            var o = m.IncidentDocGetById(id.GetValueOrDefault());
+            if (o != null)
+            {
+                var cd = new System.Net.Mime.ContentDisposition
+                {
+                    FileName = "download.pdf",
+                    Inline = false
+                };
+                Response.AppendHeader("Content-Disposition", cd.ToString());
+                return File(o.Doc, o.DocContentType);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+
         // ############################################################
         // GET: Incident/Edit/5
         [Authorize(Roles = "Coordinator Admin , Faculty")]
@@ -210,10 +251,14 @@ namespace BTS.Controllers
                 return RedirectToAction("edit", new { id = newItem.Id });
             }
 
-           if (id.GetValueOrDefault() != newItem.Id)
+            if (id.GetValueOrDefault() != newItem.Id)
             {
                 // This appears to be data tampering, so redirect the user away
                 return RedirectToAction("index");
+            }
+            if (newItem.DocUpload.ContentType != "application/pdf")
+            {
+                return RedirectToAction("edit", new { id = newItem.Id });
             }
 
 
