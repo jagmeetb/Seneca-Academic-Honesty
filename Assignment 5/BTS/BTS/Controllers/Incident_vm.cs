@@ -52,7 +52,7 @@ namespace BTS.Controllers
         [DataType(DataType.MultilineText)]
         public string description { get; set; }
 
-        [Display(Name = "Incident File")]
+        [Display(Name = "Incident File (PDF)")]
         [DataType(DataType.Upload)]
         public HttpPostedFileBase DocUpload { get; set; }
 
@@ -64,6 +64,7 @@ namespace BTS.Controllers
         [Display(Name = "Campus")]
         public string campus { get; set; }
 
+        [Display(Name = "Minor")]
         public bool isMinor { get; set; }
     }
 
@@ -117,11 +118,12 @@ namespace BTS.Controllers
         [DataType(DataType.MultilineText)]
         public string description { get; set; }
 
-        [Display(Name = "Incident File")]
+        [Display(Name = "Incident File (PDF)")]
         [DataType(DataType.Upload)]
         [FileExtensions(Extensions = ".pdf", ErrorMessage = "Incorrect file format")]
         public string DocUpload { get; set; }
 
+        [Display(Name = "Minor")]
         public bool isMinor { get; set; }
     }
     public class IncidentEditForm
@@ -149,7 +151,7 @@ namespace BTS.Controllers
         public string program { get; set; }
         public string campus { get; set; }
 
-        [Display(Name = "Incident File")]
+        [Display(Name = "Incident File (PDF)")]
         [DataType(DataType.Upload)]
         [FileExtensions(Extensions = ".pdf", ErrorMessage = "Incorrect file format")]
         public string DocUpload { get; set; }
@@ -175,7 +177,7 @@ namespace BTS.Controllers
         public List<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
 
-        [Display(Name = "Incident File")]
+        [Display(Name = "Incident File (PDF)")]
         [DataType(DataType.Upload)]
         
         public HttpPostedFileBase DocUpload { get; set; }
@@ -251,6 +253,7 @@ namespace BTS.Controllers
         }
         public int Id { get; set; }
         [Required]
+        [Display(Name = "Search Term")]
         public string searchTerm { get; set; }
         public SelectList searchFilter { get; set; }
         public ICollection<string> options { get; set; }

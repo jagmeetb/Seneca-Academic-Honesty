@@ -1,11 +1,11 @@
 ﻿@model BTS.Controllers.IncidentAddForm
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Reporting Incident";
     var userAccount = new BTS.Controllers.UserAccount(User as System.Security.Claims.ClaimsPrincipal);
 }
 
-<h2>Create</h2>
+<h2>Report</h2>
 <script src="@Url.Content("~/Scripts/jquery-2.2.1.min.js")" type="text/javascript"></script>
 
 
@@ -63,7 +63,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>IncidentAddForm</h4>
+        <h4>Report a new Incident</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
