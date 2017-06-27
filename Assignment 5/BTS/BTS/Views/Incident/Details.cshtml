@@ -82,6 +82,20 @@
             }
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.offence)
+        </dt>
+        <dd>
+            @if (User.IsInRole("Coordinator Admin"))
+            {
+                @Html.DisplayFor(model => model.offence)
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.offence.Substring(0, 20))
+            }
+        </dd>
+
     </dl>
     </dl>
 </div>
@@ -91,6 +105,11 @@
     @if (Model.status.ToLower() == "open" && Model.offence.ToLower() == "minor" && User.IsInRole("Coordinator Admin"))
     {
         <text>| </text>
-        @Html.ActionLink("Respond", "incidentResponse", new { id = Model.Id })
+        @Html.ActionLink("Close", "incidentResponse", new { id = Model.Id })
     }
+    else if (Model.status.ToLower() == "open" && (Model.offence.ToLower() == "major" || Model.offence.ToLower() == "minor (repeat)") && User.IsInRole("Coordinator Admin"))
+    {
+        <text>| </text>
+        @Html.ActionLink("Respond", "incidentResponse", new { id = Model.Id })
+}
 </p>

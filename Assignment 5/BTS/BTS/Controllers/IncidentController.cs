@@ -21,12 +21,23 @@ namespace BTS.Controllers
         [Authorize(Roles = "Coordinator Admin")]
         public ActionResult incidentResponse(int? id)
         {
-            var form = new IncidentResponse();
-            form.incidentID = id.GetValueOrDefault();
             var x = m.IncidentGetOne(id.GetValueOrDefault());
-            form.instructorID = x.Instructor.Id;
-            form.description = x.description;
-            return View(form);
+            if (x.offence.ToLower() == "minor")
+            {
+                string msg = "The involved student(s) should lose marks for this assignment";
+                m.closeIncident(id.GetValueOrDefault(), msg);
+                return RedirectToAction("details", new { id = id });
+            }
+            else if (x.offence.ToLower() == "major" || x.offence.ToLower() == "minor (repeat)")
+            {
+                var form = new IncidentResponse();
+                form.incidentID = id.GetValueOrDefault();
+
+                form.instructorID = x.Instructor.Id;
+                form.description = x.description;
+                return View(form);
+            }
+            return RedirectToAction("details", new { id = id });
         }
 
         [HttpPost]
@@ -119,22 +130,26 @@ namespace BTS.Controllers
                 return RedirectToAction("Create", AutoMapper.Mapper.Map<IncidentAddForm>(newItem));
             }*/
 
-            if (newItem.DocUpload.ContentType != null && newItem.DocUpload.ContentType != "application/pdf")
+            
+            if (newItem.DocUpload != null)
             {
-                IncidentAddForm form = new IncidentAddForm();
-                form.StudentId = new List<string>();
-                form.StudentName = new List<string>();
+                if (newItem.DocUpload.ContentType != "application/pdf")
+                {
+                    IncidentAddForm form = new IncidentAddForm();
+                    form.StudentId = new List<string>();
+                    form.StudentName = new List<string>();
 
-                form.campus = newItem.campus;
-                form.coursecode = newItem.coursecode;
-                form.description = newItem.description;
-                form.IncidentDate = newItem.IncidentDate;
-                form.InstructorName = newItem.InstructorName;
-                form.isMinor = newItem.isMinor;
-                form.program = newItem.program;
-                form.StudentName = newItem.StudentName;
-                form.StudentId = newItem.StudentId;
-                return View(form);
+                    form.campus = newItem.campus;
+                    form.coursecode = newItem.coursecode;
+                    form.description = newItem.description;
+                    form.IncidentDate = newItem.IncidentDate;
+                    form.InstructorName = newItem.InstructorName;
+                    form.isMinor = newItem.isMinor;
+                    form.program = newItem.program;
+                    form.StudentName = newItem.StudentName;
+                    form.StudentId = newItem.StudentId;
+                    return View(form);
+                }
             }
 
             // Process the input

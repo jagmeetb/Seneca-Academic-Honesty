@@ -138,17 +138,24 @@ namespace BTS.Controllers
         public int id { get; set; }
         [Required]
         [DataType(DataType.MultilineText)]
+        [Display(Name = "Description")]
         public string description { get; set; }
         [Required]
+        [Display(Name = "Status")]
         public string status { get; set; }
         [Required]
+        [Display(Name = "Student ID")]
         public List<string> StudentIds { get; set; }
         [Required]
+        [Display(Name = "Student Name")]
         public List<string> StudentNames { get; set; }
         public int InstructorId { get; set; }
+        [Display(Name = "Instructor Name")]
         public string InstructorName { get; set; }
 
+        [Display(Name = "Program")]
         public string program { get; set; }
+        [Display(Name = "Campus")]
         public string campus { get; set; }
 
         [Display(Name = "Incident File (PDF)")]
@@ -213,15 +220,15 @@ namespace BTS.Controllers
 
         [Display(Name = "Incident Document")]
         public string IncidentDoc { get; set; }
-            /*
+        /*
+    {
+        get
         {
-            get
-            {
-                return $"/file/{Id}";
-            }
-        }*/
-        
+            return $"/file/{Id}";
+        }
+    }*/
 
+        [Display(Name = "Offence Level")]
         public string offence { get; set; }
     }
 

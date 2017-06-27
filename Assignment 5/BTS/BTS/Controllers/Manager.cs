@@ -347,7 +347,7 @@ namespace BTS.Controllers
             {
                 if (x != "")
                 {
-                    mystudent.Add(ds.Students.SingleOrDefault(s => s.studentId == x));
+                    mystudent.Add(ds.Students.Include("Incidents").SingleOrDefault(s => s.studentId == x));
                 }
             }
 
@@ -390,15 +390,32 @@ namespace BTS.Controllers
                 {
                     incident.Students.Add(x);
                 }
-//                incident.Doc = docBytes;
-//                incident.DocContentType = newItem.DocUpload.ContentType;
+                //                incident.Doc = docBytes;
+                //                incident.DocContentType = newItem.DocUpload.ContentType;
 
                 incident.status = "open";
                 incident.campus = newItem.campus;
                 incident.program = newItem.program;
                 if (newItem.isMinor)
                 {
-                    incident.offence = "Minor";
+                    
+                    bool checkall = false;
+                    foreach (var a in mystudent)
+                    {
+                        if (a.Incidents.Count() > 0)
+                        {
+                            checkall = true;
+                        }
+                    }
+
+                    if (!checkall)
+                    {
+                        incident.offence = "Minor";
+                    }
+                    else
+                    {
+                        incident.offence = "Minor (Repeat)";
+                    }
                 }
                 else
                 {
@@ -481,7 +498,7 @@ namespace BTS.Controllers
             var babcadv = Mapper.Map<IEnumerable<Incident>>(ds.Incidents);
             var w = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
             var x = w.Where(a => a.offence.ToLower() == "minor");
-            var y = x.Where(a => a.status.ToLower() == "open");
+            var y = w.Where(a => a.status.ToLower() == "open");
 
             IEnumerable<IncidentBase> z = Mapper.Map<IEnumerable<IncidentBase>>(y);
             return z;

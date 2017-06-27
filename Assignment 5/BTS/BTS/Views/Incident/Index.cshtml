@@ -32,9 +32,12 @@ else
             @Html.DisplayNameFor(model => model.dateReported)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.status) 
+            @Html.DisplayNameFor(model => model.status)
         </th>
-        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.offence)
+        </th>
+        <th>Actions</th>
     </tr>
 
 @foreach (var item in Model) {
@@ -49,12 +52,30 @@ else
             @Html.DisplayFor(modelItem => item.status)
         </td>
         <td>
+            @if (User.IsInRole("Coordinator Admin"))
+            {
+                @Html.DisplayFor(modelItem => item.offence)
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem => item.offence.Substring(0, 20))
+            }
+        </td>
+        <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id = item.Id })
-            @if (item.status.ToLower() == "open" && item.offence.ToLower() == "minor")
+            @if (User.IsInRole("Coordinator Admin"))
             {
-                <text>| </text>
-                @Html.ActionLink("Respond", "incidentResponse", new { id = item.Id })
+                if (item.status.ToLower() == "open" && (item.offence.ToLower() == "major" || item.offence.ToLower() == "minor (repeat)"))
+                {
+                    <text>| </text>
+                    @Html.ActionLink("Respond", "incidentResponse", new { id = item.Id })
+                }
+                else if (item.status.ToLower() == "open" && item.offence.ToLower() == "minor")
+                {
+                    <text>| </text>
+                    @Html.ActionLink("Close", "incidentResponse", new { id = item.Id })
+                }
             }
         </td>
     </tr>
