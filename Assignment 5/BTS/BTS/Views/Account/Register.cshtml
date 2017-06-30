@@ -49,9 +49,9 @@
             @{ 
                 foreach (var item in Model.RoleList)
                 {
-                    <div class="checkbox">
+                    <div class="radio">
                         <label>
-                            <input type="checkbox" name="Roles" checked="@item.Selected" value="@item.Text" />@item.Text
+                            <input type="radio" name="Roles" checked="@item.Selected" value="@item.Text" />@item.Text
                         </label>
                     </div>
                 }

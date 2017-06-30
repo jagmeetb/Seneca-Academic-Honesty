@@ -277,13 +277,39 @@ namespace BTS.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Register(RegisterViewModel model)
 		{
-			if (ModelState.IsValid)
+            Manager m = new Manager();
+            if (ModelState.IsValid)
 			{
 				var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
 				var result = await UserManager.CreateAsync(user, model.Password);
 
-				if (result.Succeeded)
+                var instructors = m.InstructorGetAll();
+                var studs = m.StudentGetAll();
+                bool check = false;
+
+                if (model.Roles.First() == "Faculty")
+                {
+                    foreach (var x in instructors)
+                    {
+                        if (x.name == (model.GivenName + " " + model.Surname)){
+                            check = true;
+                        }
+                    }
+                }
+                else if (model.Roles.First() == "Student")
+                {
+                    foreach (var x in studs)
+                    {
+                        if (x.name == (model.GivenName + " " + model.Surname))
+                        {
+                            check = true;
+                        }
+                    }
+                }
+
+
+                if (result.Succeeded && check)
 				{
                     // ############################################################
                     // Claims-aware "Register" method to handle user-submitted data
@@ -322,8 +348,8 @@ namespace BTS.Controllers
 
 			// If we got this far, something failed, redisplay form
 			var form = AutoMapper.Mapper.Map<RegisterViewModelForm>(model);
-			Manager m = new Manager();
-			var roles = m.RoleClaimGetAllStrings();
+            
+            var roles = m.RoleClaimGetAllStrings();
 
 			form.RoleList = new MultiSelectList(
 				items: roles,

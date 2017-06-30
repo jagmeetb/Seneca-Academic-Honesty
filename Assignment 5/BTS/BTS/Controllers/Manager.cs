@@ -488,10 +488,35 @@ namespace BTS.Controllers
         // ############################################################
         public IEnumerable<IncidentBase> IncidentGetAll()
         {
+            if (UserAccount.HasRoleClaim("Faculty"))
+            {
+                var inst = ds.Instructors.Where(a => a.name == (UserAccount.GivenName + " " + UserAccount.Surname));
+                var b = Mapper.Map<IEnumerable<IncidentBase>>(inst.First().Incidents);
+                return b;
+            }
+            else if (UserAccount.HasRoleClaim("Student"))
+            {
+                var stud = ds.Students.Where(a => a.name == (UserAccount.GivenName + " " + UserAccount.Surname));
+                var b = Mapper.Map<IEnumerable<IncidentBase>>(stud.First().Incidents);
+                return b;
+            }
+
             var x = Mapper.Map<IEnumerable<IncidentBase>>(ds.Incidents);
             return x;
         }
-        
+
+        public IEnumerable<InstructorBase> InstructorGetAll()
+        {
+            var x = Mapper.Map<IEnumerable<InstructorBase>>(ds.Instructors);
+            return x;
+        }
+
+        public IEnumerable<StudentBase> StudentGetAll()
+        {
+            var x = Mapper.Map<IEnumerable<StudentBase>>(ds.Students);
+            return x;
+        }
+
         public IEnumerable<IncidentBase> IncidentGetAllOpen()
         {
 
